@@ -7,19 +7,24 @@ public class PlayerWeapon : MonoBehaviour
 
     public GameObject testBullet;
 
+    float cooldown = 0.5f;
+
+    float timeStamp = 0;
+
     Vector3 mousePosition;
 
     void Start()
     {
-        
+        timeStamp = Time.time;
     }
 
 
     void Update()
     {
-        if (Input.GetButtonDown("Fire1"))
+        if (Input.GetButton("Fire1") && timeStamp <= Time.time)
         {
             Shoot();
+            timeStamp = Time.time + cooldown;
         }
     }
 
@@ -37,7 +42,7 @@ public class PlayerWeapon : MonoBehaviour
 
         //TestWeapon attributes
         script.damage = Random.Range(20,30);
-        script.speed = 10f;
-        script.range = 3.0f;
+        script.speed = 7.4f;
+        script.range = 2.5f;
     }
 }
