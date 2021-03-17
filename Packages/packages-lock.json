@@ -1,5 +1,14 @@
 {
   "dependencies": {
+    "com.limjoshua.igconsole": {
+      "version": "file:E:/Other/Ladatut tiedostot/InGameConsole-main",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {
+        "com.unity.ugui": "1.0.0",
+        "com.unity.textmeshpro": "2.1.1"
+      }
+    },
     "com.unity.2d.animation": {
       "version": "3.2.3",
       "depth": 0,
@@ -87,7 +96,7 @@
       "depth": 0,
       "source": "registry",
       "dependencies": {
-        "com.unity.test-framework": "1.1.3"
+        "com.unity.test-framework": "1.1.1"
       },
       "url": "https://packages.unity.com"
     },
@@ -117,8 +126,8 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.textmeshpro": {
-      "version": "2.0.1",
-      "depth": 0,
+      "version": "2.1.1",
+      "depth": 1,
       "source": "registry",
       "dependencies": {
         "com.unity.ugui": "1.0.0"
