@@ -27,7 +27,7 @@ public class PlayerWeapon : MonoBehaviour
     {
         mousePosition = Input.mousePosition;
         mousePosition.z = Camera.main.nearClipPlane;
-        mousePosition = Camera.main.ScreenToWorldPoint(mousePosition);
+        mousePosition = Camera.main.ScreenToWorldPoint(mousePosition) + new Vector3(0, 0.3f, 0);
 
         Vector3 difference = mousePosition - transform.position;
         float rotationZ = Mathf.Atan2(difference.y, difference.x) * Mathf.Rad2Deg;
