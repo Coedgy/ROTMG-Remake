@@ -32,6 +32,12 @@ public class PlayerWeapon : MonoBehaviour
         Vector3 difference = mousePosition - transform.position;
         float rotationZ = Mathf.Atan2(difference.y, difference.x) * Mathf.Rad2Deg;
 
-        Instantiate(testBullet, (transform.position + new Vector3(0, -0.3f, 0)), Quaternion.Euler(0.0f, 0.0f, rotationZ));
+        GameObject bullet = Instantiate(testBullet, (transform.position + new Vector3(0, -0.3f, 0)), Quaternion.Euler(0.0f, 0.0f, rotationZ));
+        Bullet script = bullet.GetComponent<Bullet>();
+
+        //TestWeapon attributes
+        script.damage = Random.Range(20,30);
+        script.speed = 10f;
+        script.range = 3.0f;
     }
 }

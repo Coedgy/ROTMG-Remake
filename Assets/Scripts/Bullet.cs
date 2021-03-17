@@ -4,10 +4,8 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-
-    //CHANGE TO PUBLIC
-    float speed = 10f;
-    float range = 3f;
+    public float speed = 10f;
+    public float range = 3f;
     public int damage = 20;
     public Rigidbody2D rb;
 
