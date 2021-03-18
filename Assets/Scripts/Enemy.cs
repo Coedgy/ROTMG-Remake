@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TestEnemy : MonoBehaviour
+public class Enemy : MonoBehaviour
 {
 
     public int health = 100;

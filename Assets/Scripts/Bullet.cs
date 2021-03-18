@@ -40,7 +40,7 @@ public class Bullet : MonoBehaviour
         }
 
         Debug.Log(hitInfo.gameObject);
-        TestEnemy enemy = hitInfo.GetComponent<TestEnemy>();
+        Enemy enemy = hitInfo.GetComponent<Enemy>();
         if (enemy != null)
         {
             enemy.TakeDamage(damage);

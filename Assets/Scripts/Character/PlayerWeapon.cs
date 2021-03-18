@@ -63,7 +63,6 @@ public class PlayerWeapon : MonoBehaviour
         //Animation
         anim.SetFloat("MouseDirX", (Input.mousePosition.x / Camera.main.pixelWidth) - 0.5f);
         anim.SetFloat("MouseDirY", (Input.mousePosition.y / Camera.main.pixelHeight) - 0.5f);
-        Debug.Log(anim.GetFloat("MouseDirX"));
         anim.SetTrigger("ShootEvent");
         timerOn = true;
         timerLeft = 1f;
