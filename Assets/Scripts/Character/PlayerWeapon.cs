@@ -11,10 +11,15 @@ public class PlayerWeapon : MonoBehaviour
 
     float timeStamp = 0;
 
+    float timerLeft = 0;
+    bool timerOn = false;
+
     Vector3 mousePosition;
+    private Animator anim;
 
     void Start()
     {
+        anim = GetComponent<Animator>();
         timeStamp = Time.time;
     }
 
@@ -25,6 +30,16 @@ public class PlayerWeapon : MonoBehaviour
         {
             Shoot();
             timeStamp = Time.time + cooldown;
+        }
+
+        if (timerOn)
+        {
+            timerLeft -= 0.1f;
+
+            if (timerLeft <= 0)
+            {
+                Timer();
+            }
         }
     }
 
@@ -44,5 +59,20 @@ public class PlayerWeapon : MonoBehaviour
         script.damage = Random.Range(20,30);
         script.speed = 7.4f;
         script.range = 2.5f;
+
+        //Animation
+        anim.SetFloat("MouseDirX", (Input.mousePosition.x / Camera.main.pixelWidth) - 0.5f);
+        anim.SetFloat("MouseDirY", (Input.mousePosition.y / Camera.main.pixelHeight) - 0.5f);
+        Debug.Log(anim.GetFloat("MouseDirX"));
+        anim.SetTrigger("ShootEvent");
+        timerOn = true;
+        timerLeft = 1f;
+    }
+
+    void Timer()
+    {
+        anim.ResetTrigger("ShootEvent");
+        timerOn = false;
+        timerLeft = 0;
     }
 }
