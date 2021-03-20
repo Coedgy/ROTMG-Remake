@@ -4,6 +4,15 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    public int health;
+
+    public int mana;
+
+    public int level;
+    public int exp;
+
+    public Class playerClass;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -15,4 +24,11 @@ public class Player : MonoBehaviour
     {
         
     }
+}
+
+public enum Class
+{
+    Knight,
+    Archer,
+    Wizard
 }
