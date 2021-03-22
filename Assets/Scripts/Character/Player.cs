@@ -112,6 +112,22 @@ public enum Class
     Wizard
 }
 
+public enum WeaponType
+{
+    Wand,
+    Staff,
+    Bow,
+    Dagger,
+    Sword
+}
+
+public enum ArmorType
+{
+    Robe,
+    Hide,
+    Armor
+}
+
 public struct ClassValues
 {
     //Base stats
