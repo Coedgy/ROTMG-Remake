@@ -29,8 +29,9 @@ public class Player : MonoBehaviour
     void Start()
     {
         character = new Character(Class.Knight);
-        health = 120;
         UpdateValues();
+        health = maxHealth;
+        mana = maxMana;
     }
 
     // Update is called once per frame
@@ -102,6 +103,24 @@ public class Character
         dexterity = def.dexterityBase;
         wisdom = def.wisdomBase;
         vitality = def.vitalityBase;
+    }
+
+    public void LevelUp()
+    {
+        level++;
+        expNeeded = expNeeded + 100;
+        exp = 0;
+
+        ClassValues def = new ClassValues(characterClass);
+
+        life += def.lifePL;
+        manaP += def.manaPPL;
+        attack += def.attackPL;
+        defense += def.defensePL;
+        speed += def.speedPL;
+        dexterity += def.dexterityPL;
+        wisdom += def.wisdomPL;
+        vitality += def.vitalityPL;
     }
 }
 
