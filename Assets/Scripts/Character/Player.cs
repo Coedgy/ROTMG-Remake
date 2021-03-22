@@ -1,19 +1,79 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 public class Player : MonoBehaviour
 {
     public int health;
+    int maxHealth;
+    public TextMeshProUGUI healthBarText;
+    public Slider healthBar;
 
     public int mana;
+    int maxMana;
+    public TextMeshProUGUI manaBarText;
+    public Slider manaBar;
+
+    int level;
+    int exp;
+    int expNeeded;
+    public TextMeshProUGUI expText;
+    public TextMeshProUGUI levelText;
+    public Slider levelBar;
+
+    public Character character;
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        character = new Character(Class.Knight);
+        health = 120;
+        UpdateValues();
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        UpdateInfoBars();
+    }
+
+    void UpdateInfoBars()
+    {
+        exp = character.exp;
+        string lvlText = "Level " + level;
+        string newExpText = exp + "/" + expNeeded;
+        string hpText = health + "/" + maxHealth;
+        string manaText = mana + "/" + maxMana;
+
+        healthBarText.text = hpText;
+        manaBarText.text = manaText;
+        levelText.text = lvlText;
+        expText.text = newExpText;
+
+        healthBar.value = (float)health / (float)maxHealth;
+        manaBar.value = (float)mana / (float)maxMana;
+        levelBar.value = (float)exp / (float)expNeeded;
+    }
+
+    void UpdateValues()
+    {
+        level = character.level;
+        exp = character.exp;
+        expNeeded = character.expNeeded;
+        maxMana = character.manaP;
+        maxHealth = character.life;
+    }
+}
+
+public class Character
+{
+    public Class characterClass;
 
     public int level;
     public int exp;
-
-    public Class playerClass;
-
-    public int characterID;
+    public int expNeeded;
 
     public int life;
     public int manaP;
@@ -24,16 +84,24 @@ public class Player : MonoBehaviour
     public int wisdom;
     public int vitality;
 
-    // Start is called before the first frame update
-    void Start()
+    public Character(Class cClass)
     {
-        
-    }
+        ClassValues def = new ClassValues(cClass);
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        characterClass = cClass;
+
+        level = 1;
+        exp = 0;
+        expNeeded = 50;
+
+        life = def.lifeBase;
+        manaP = def.manaPBase;
+        attack = def.attackBase;
+        defense = def.defenseBase;
+        speed = def.speedBase;
+        dexterity = def.dexterityBase;
+        wisdom = def.wisdomBase;
+        vitality = def.vitalityBase;
     }
 }
 

@@ -3565,7 +3565,7 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0.369
+  m_Value: 0.235
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -8239,19 +8239,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 0
+  healthBarText: {fileID: 1311452306}
+  healthBar: {fileID: 908523580}
   mana: 0
-  level: 0
-  exp: 0
-  playerClass: 0
-  characterID: 0
-  life: 0
-  manaP: 0
-  attack: 0
-  defense: 0
-  speed: 0
-  dexterity: 0
-  wisdom: 0
-  vitality: 0
+  manaBarText: {fileID: 1117572052}
+  manaBar: {fileID: 1677906338}
+  expText: {fileID: 629518775}
+  levelText: {fileID: 1834619425}
+  levelBar: {fileID: 666227498}
 --- !u!1 &1987659378
 GameObject:
   m_ObjectHideFlags: 0
