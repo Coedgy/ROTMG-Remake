@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class Slot : MonoBehaviour
 {
+    
+    public bool isEquipmentSlot;
+    public int amount;
+
     // Start is called before the first frame update
     void Start()
     {

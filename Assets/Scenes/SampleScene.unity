@@ -8666,7 +8666,7 @@ GameObject:
   - component: {fileID: 2083444472}
   - component: {fileID: 2083444475}
   m_Layer: 0
-  m_Name: Queen_Idle_1
+  m_Name: Queen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
