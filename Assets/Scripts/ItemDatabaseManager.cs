@@ -37,6 +37,10 @@ public class ItemDatabaseManager : MonoBehaviour
         {
             throw new System.Exception("ItemDatabase ID verifying failed, idSUM was '" + idSum + "', and it should be '" + idSumTarget + "'");
         }
+        else
+        {
+            Debug.Log("ItemDatabase ID's verified successfully");
+        }
     }
 
     public static Item GetItemByID(int ID)
