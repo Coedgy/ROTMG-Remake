@@ -452,6 +452,7 @@ GameObject:
   m_Component:
   - component: {fileID: 185343606}
   - component: {fileID: 185343605}
+  - component: {fileID: 185343607}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -478,13 +479,26 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 185343604}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.3084555, y: 0.051815573, z: -16.90002}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -953.86847, y: -540.1356, z: -31.320501}
+  m_LocalScale: {x: 1.8532819, y: 1.8532819, z: 1.8532819}
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_Father: {fileID: 1987659382}
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &185343607
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 185343604}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a21fb1e38d88d094ab47e1b80b082e37, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  database: {fileID: 11400000, guid: d8a7756badc9db64cb73fc906fcefa31, type: 2}
 --- !u!1 &231030088
 GameObject:
   m_ObjectHideFlags: 0
@@ -1363,6 +1377,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0b53769526a1a54d9bc56dbe7905a8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isEquipmentSlot: 0
+  amount: 0
 --- !u!1 &470023739
 GameObject:
   m_ObjectHideFlags: 0
@@ -2061,6 +2077,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0b53769526a1a54d9bc56dbe7905a8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isEquipmentSlot: 0
+  amount: 0
 --- !u!1 &513995690
 GameObject:
   m_ObjectHideFlags: 0
@@ -2149,6 +2167,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0b53769526a1a54d9bc56dbe7905a8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isEquipmentSlot: 0
+  amount: 0
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -2320,6 +2340,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0b53769526a1a54d9bc56dbe7905a8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isEquipmentSlot: 0
+  amount: 0
 --- !u!1 &601332897
 GameObject:
   m_ObjectHideFlags: 0
@@ -2638,6 +2660,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0b53769526a1a54d9bc56dbe7905a8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isEquipmentSlot: 0
+  amount: 0
 --- !u!1 &666227496
 GameObject:
   m_ObjectHideFlags: 0
@@ -3879,6 +3903,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0b53769526a1a54d9bc56dbe7905a8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isEquipmentSlot: 0
+  amount: 0
 --- !u!1 &995315373
 GameObject:
   m_ObjectHideFlags: 0
@@ -4044,6 +4070,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0b53769526a1a54d9bc56dbe7905a8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isEquipmentSlot: 0
+  amount: 0
 --- !u!1 &1003466749
 GameObject:
   m_ObjectHideFlags: 0
@@ -4206,6 +4234,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0b53769526a1a54d9bc56dbe7905a8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isEquipmentSlot: 0
+  amount: 0
 --- !u!1 &1062452375
 GameObject:
   m_ObjectHideFlags: 0
@@ -5030,6 +5060,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0b53769526a1a54d9bc56dbe7905a8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isEquipmentSlot: 0
+  amount: 0
 --- !u!1 &1407566571
 GameObject:
   m_ObjectHideFlags: 0
@@ -5550,6 +5582,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0b53769526a1a54d9bc56dbe7905a8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isEquipmentSlot: 0
+  amount: 0
 --- !u!1 &1521614265
 GameObject:
   m_ObjectHideFlags: 0
@@ -6442,6 +6476,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0b53769526a1a54d9bc56dbe7905a8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isEquipmentSlot: 0
+  amount: 0
 --- !u!1 &1677906336
 GameObject:
   m_ObjectHideFlags: 0
@@ -6620,6 +6656,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0b53769526a1a54d9bc56dbe7905a8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isEquipmentSlot: 0
+  amount: 0
 --- !u!1 &1783276398
 GameObject:
   m_ObjectHideFlags: 0
@@ -8497,8 +8535,9 @@ RectTransform:
   - {fileID: 354091748}
   - {fileID: 1568572349}
   - {fileID: 2142785218}
+  - {fileID: 185343606}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -8839,7 +8878,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2105174159
 GameObject:
