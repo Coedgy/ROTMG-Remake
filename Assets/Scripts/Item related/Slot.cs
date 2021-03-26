@@ -9,6 +9,7 @@ public class Slot : MonoBehaviour, IPointerClickHandler, IDragHandler, IBeginDra
 {
     public Item item;
     public bool isEquipmentSlot;
+    public EquipmentSlotType equipmentSlotType;
     public int amount;
 
     public bool isEmpty;
@@ -249,10 +250,42 @@ public class Slot : MonoBehaviour, IPointerClickHandler, IDragHandler, IBeginDra
 
     void SwapEvent()
     {
-        if (foundSlot.GetComponent<Slot>())
+        Slot newSlot = foundSlot.GetComponent<Slot>();
+        if (newSlot.isEquipmentSlot)
         {
-            Debug.Log("SwapEvent");
+            if (newSlot.equipmentSlotType == EquipmentSlotType.Weapon && item is Weapon)
+            {
+
+            }
+            else if (newSlot.equipmentSlotType == EquipmentSlotType.Armor && item is Armor)
+            {
+
+            }
+            else if (newSlot.equipmentSlotType == EquipmentSlotType.Ability && item is Ability)
+            {
+
+            }
+            else if (newSlot.equipmentSlotType == EquipmentSlotType.Accessory && item is Accessory)
+            {
+
+            }
+            else
+            {
+                return;
+            }
         }
+
+        Item tempItem = newSlot.item;
+        int tempAmount = newSlot.amount;
+
+        newSlot.item = item;
+        newSlot.amount = amount;
+
+        item = tempItem;
+        amount = tempAmount;
+
+        UpdateSlot();
+        newSlot.UpdateSlot();
     }
 
     void DropEvent()
@@ -275,4 +308,12 @@ public class Slot : MonoBehaviour, IPointerClickHandler, IDragHandler, IBeginDra
     {
         
     }
+}
+
+public enum EquipmentSlotType
+{
+    Weapon,
+    Armor,
+    Ability,
+    Accessory
 }

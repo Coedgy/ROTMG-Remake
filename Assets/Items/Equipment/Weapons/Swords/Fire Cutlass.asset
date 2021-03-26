@@ -12,14 +12,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d49b42c1cd82f1b479df6fdaa2108ae2, type: 3}
   m_Name: Fire Cutlass
   m_EditorClassIdentifier: 
-  ID: 0
-  name: 
-  description: 
-  artwork: {fileID: 0}
+  ID: 11
+  name: Fire Cutlass
+  description: wtf is this
+  artwork: {fileID: 6454297184081698983, guid: 8415e57776c05084f8d66e01ac0e2143, type: 3}
   stackable: 0
   maxStack: 1
-  damage: 0
-  range: 0
-  cooldown: 0
-  speed: 0
-  type: 0
+  maxHealthBonus: 0
+  maxManaBonus: 0
+  attackBonus: 0
+  defenseBonus: 0
+  speedBonus: 0
+  dexterityBonus: 0
+  wisdomBonus: 0
+  vitalityBonus: 0
+  damage: 40
+  range: 5
+  cooldown: 0.1
+  speed: 4
+  type: 4
