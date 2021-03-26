@@ -16,5 +16,5 @@ public class Item : ScriptableObject
 
 public class Equipment : Item
 {
-
+    //Add attribute bonuses here
 }

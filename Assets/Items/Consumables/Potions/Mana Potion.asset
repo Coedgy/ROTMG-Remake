@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db0ceded610d16546896b867786dd509, type: 3}
   m_Name: Mana Potion
   m_EditorClassIdentifier: 
-  ID: 0
-  name: 
-  description: 
-  artwork: {fileID: 0}
+  ID: 2
+  name: Mana Potion
+  description: Instantly restores some of your mana
+  artwork: {fileID: 21300000, guid: 723d8f3c6e541104ea2b7846001557b2, type: 3}
   stackable: 0
   maxStack: 1

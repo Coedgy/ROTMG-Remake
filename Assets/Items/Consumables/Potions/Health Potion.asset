@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db0ceded610d16546896b867786dd509, type: 3}
   m_Name: Health Potion
   m_EditorClassIdentifier: 
-  ID: 0
-  name: 
-  description: 
-  artwork: {fileID: 0}
+  ID: 1
+  name: Health Potion
+  description: Instantly restores some of your health
+  artwork: {fileID: 21300000, guid: 495b3d06ff2f0794ca52af5bc2593717, type: 3}
   stackable: 0
   maxStack: 1
