@@ -13,3 +13,8 @@ public class Item : ScriptableObject
     public bool stackable = false;
     public int maxStack = 1;
 }
+
+public class Equipment : Item
+{
+
+}
