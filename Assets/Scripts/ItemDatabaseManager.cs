@@ -76,4 +76,14 @@ public class ItemDatabaseManager : MonoBehaviour
         Debug.LogError("Item by ID '" + ID + "' was not found");
         return null;
     }
+
+    public static Item GetRandomItemByList(List<Item> list)
+    {
+        return list[Random.Range(0, list.Count)];
+    }
+
+    public static Item GetRandomItem()
+    {
+        return script.database.allItems[Random.Range(0, script.database.allItems.Count)];
+    }
 }
