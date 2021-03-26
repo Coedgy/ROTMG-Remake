@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class ItemDatabaseManager : MonoBehaviour
@@ -23,7 +24,6 @@ public class ItemDatabaseManager : MonoBehaviour
 
     public static void VerifyItemsID()
     {
-        int idSumTarget = 0;
         int idSum = 0;
 
         foreach (Item item in script.database.allItems)
@@ -31,15 +31,35 @@ public class ItemDatabaseManager : MonoBehaviour
             idSum += item.ID;
         }
 
-        idSumTarget = (script.database.allItems.Count * (script.database.allItems.Count + 1) / 2);
-
-        if (idSum != idSumTarget)
+        if (idSum != (script.database.allItems.Count * (script.database.allItems.Count + 1) / 2))
         {
-            throw new System.Exception("ItemDatabase ID verifying failed, idSUM was '" + idSum + "', and it should be '" + idSumTarget + "'");
+            FindWrongID();
+            throw new System.Exception("ItemDatabase ID verifying failed, idSUM was '" + idSum + "', and it should be '" + (script.database.allItems.Count * (script.database.allItems.Count + 1) / 2) + "'");
         }
         else
         {
             Debug.Log("ItemDatabase ID's verified successfully");
+        }
+    }
+
+    private static void FindWrongID()
+    {
+        int idSum = 0;
+        int n = 0;
+
+        List<Item> tempList = new List<Item>(script.database.allItems);
+        tempList = tempList.OrderBy(x=>x.ID).ToList();
+
+        foreach (Item item in tempList)
+        {
+            idSum += item.ID;
+            n++;
+
+            if ((n * (n + 1) / 2) != idSum)
+            {
+                Debug.LogError("Incorrect ID value found at ID '" + item.ID + "'");
+                return;
+            }
         }
     }
 
