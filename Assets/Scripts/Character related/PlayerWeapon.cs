@@ -26,7 +26,7 @@ public class PlayerWeapon : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetButton("Fire1") && timeStamp <= Time.time)
+        if (Input.GetButton("Fire1") && timeStamp <= Time.time && !UIManager.MouseOverUI())
         {
             Shoot();
             timeStamp = Time.time + cooldown;

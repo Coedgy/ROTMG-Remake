@@ -65,6 +65,7 @@ public class ItemDatabaseManager : MonoBehaviour
 
     public static Item GetItemByID(int ID)
     {
+        //script.database.allItems.FirstOrDefault(x => x.ID == ID);
         foreach (Item item in script.database.allItems)
         {
             if (item.ID == ID)

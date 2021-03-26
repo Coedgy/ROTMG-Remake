@@ -15,6 +15,7 @@ public class SpriteRendererManager : MonoBehaviour
         {
             script = this;
         }
+        UIManager.InitializeElements();
     }
 
     void Start()
@@ -43,6 +44,28 @@ public class SpriteRendererManager : MonoBehaviour
             {
                 meshrend.sortingOrder = (int)(meshrend.transform.position.y * -100);
             }
+        }
+    }
+}
+
+public static class UIManager
+{
+    static RectTransform sidePanel;
+
+    public static void InitializeElements()
+    {
+        sidePanel = GameObject.Find("SidePanel").GetComponent<RectTransform>();
+    }
+
+    public static bool MouseOverUI()
+    {
+        if (RectTransformUtility.RectangleContainsScreenPoint(sidePanel, Input.mousePosition))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 }
