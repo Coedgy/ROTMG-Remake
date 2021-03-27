@@ -92,7 +92,7 @@ public class Slot : MonoBehaviour, IPointerClickHandler, IDragHandler, IBeginDra
 
     private void Start()
     {
-        if (Random.Range(0,2) == 1)
+        if (!isEquipmentSlot && Random.Range(0,2) == 1)
         {
             item = ItemDatabaseManager.GetRandomItem();
         }
@@ -171,7 +171,6 @@ public class Slot : MonoBehaviour, IPointerClickHandler, IDragHandler, IBeginDra
     {
         if (!isEmpty)
         {
-            Debug.Log("OnBeginDrag");
             dragging = true;
 
             Color c = slotImage.color;
@@ -189,7 +188,6 @@ public class Slot : MonoBehaviour, IPointerClickHandler, IDragHandler, IBeginDra
     {
         if (dragging)
         {
-            Debug.Log("Dragging");
             iconRectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
         }
     }
@@ -200,7 +198,6 @@ public class Slot : MonoBehaviour, IPointerClickHandler, IDragHandler, IBeginDra
         if (dragging == true)
         {
             SlotCheck();
-            Debug.Log("OnEndDrag");
 
             //Change iconRectTransform's parent and alpha to original positions
             iconRectTransform.SetParent(transform);

@@ -7,12 +7,10 @@ using TMPro;
 public class Player : MonoBehaviour
 {
     public int health;
-    int maxHealth;
     public TextMeshProUGUI healthBarText;
     public Slider healthBar;
 
     public int mana;
-    int maxMana;
     public TextMeshProUGUI manaBarText;
     public Slider manaBar;
 
@@ -25,6 +23,16 @@ public class Player : MonoBehaviour
 
     public Character character;
 
+    public int maxHealth;
+    public int maxMana;
+
+    public float damageMultiplier;
+    public float damageReduction;
+    public float movementSpeed;
+    public float attackSpeed;
+    public float healthRegen;
+    public float manaRegen;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -32,12 +40,26 @@ public class Player : MonoBehaviour
         UpdateValues();
         health = maxHealth;
         mana = maxMana;
+
+        InvokeRepeating("PerSecondFunctions", 1f, 1f);
     }
 
     // Update is called once per frame
     void Update()
     {
         UpdateInfoBars();
+
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            character.LevelUp();
+            UpdateValues();
+        }
+    }
+
+    void PerSecondFunctions()
+    {
+        health = Mathf.RoundToInt(Mathf.Clamp(health + healthRegen, 0f, maxHealth));
+        mana = Mathf.RoundToInt(Mathf.Clamp(mana + manaRegen, 0f, maxMana));
     }
 
     void UpdateInfoBars()
@@ -65,6 +87,23 @@ public class Player : MonoBehaviour
         expNeeded = character.expNeeded;
         maxMana = character.manaP;
         maxHealth = character.life;
+
+        damageMultiplier = 0.5f + (character.attack) / 50f;
+        damageReduction = character.defense;
+        movementSpeed = 2.8f + 5.6f * ((character.speed) / 75f);
+        attackSpeed = 1f + 1.5f * ((character.dexterity) / 75f);
+        healthRegen = 1f + 0.24f * (character.vitality);
+        manaRegen = 0.5f + 0.12f * (character.wisdom);
+    }
+
+    public void TakeDamage(float damage)
+    {
+        float value = damage - damageReduction;
+        if (value < (damage * 0.1f))
+        {
+            value = damage * 0.1f;
+        }
+        health -= Mathf.CeilToInt(value);
     }
 }
 
@@ -107,20 +146,27 @@ public class Character
 
     public void LevelUp()
     {
-        level++;
-        expNeeded = expNeeded + 100;
-        exp = 0;
+        if (level < 20)
+        {
+            level++;
+            expNeeded = expNeeded + 100;
+            exp = 0;
 
-        ClassValues def = new ClassValues(characterClass);
+            ClassValues def = new ClassValues(characterClass);
 
-        life += def.lifePL;
-        manaP += def.manaPPL;
-        attack += def.attackPL;
-        defense += def.defensePL;
-        speed += def.speedPL;
-        dexterity += def.dexterityPL;
-        wisdom += def.wisdomPL;
-        vitality += def.vitalityPL;
+            life += def.lifePL;
+            manaP += def.manaPPL;
+            attack += def.attackPL;
+            defense += def.defensePL;
+            speed += def.speedPL;
+            dexterity += def.dexterityPL;
+            wisdom += def.wisdomPL;
+            vitality += def.vitalityPL;
+        }
+        else
+        {
+            Debug.Log("Maximum level of 20 reached");
+        }
     }
 }
 

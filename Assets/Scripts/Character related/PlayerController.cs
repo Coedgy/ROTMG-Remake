@@ -4,9 +4,6 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField, Tooltip("Max speed, in units per second, that the character moves.")]
-    float speed = 4;
-
     private Animator anim;
     private Vector2 velocity;
     private Rigidbody2D rb;
@@ -57,6 +54,6 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-        rb.MovePosition(rb.position + velocity * speed * Time.fixedDeltaTime);
+        rb.MovePosition(rb.position + velocity * gameObject.GetComponent<Player>().movementSpeed * Time.fixedDeltaTime);
     }
 }

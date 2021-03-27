@@ -7,8 +7,6 @@ public class PlayerWeapon : MonoBehaviour
 
     public GameObject testBullet;
 
-    float cooldown = 0.5f;
-
     float timeStamp = 0;
 
     float timerLeft = 0;
@@ -29,7 +27,7 @@ public class PlayerWeapon : MonoBehaviour
         if (Input.GetButton("Fire1") && timeStamp <= Time.time && !UIManager.MouseOverUI())
         {
             Shoot();
-            timeStamp = Time.time + cooldown;
+            timeStamp = Time.time + (60f / gameObject.GetComponent<Player>().attackSpeed /100);
         }
 
         if (timerOn)
@@ -56,7 +54,7 @@ public class PlayerWeapon : MonoBehaviour
         Bullet script = bullet.GetComponent<Bullet>();
 
         //TestWeapon attributes
-        script.damage = Random.Range(20,30);
+        script.damage = Random.Range(20f,30f) * gameObject.GetComponent<Player>().damageMultiplier;
         script.speed = 7.4f;
         script.range = 2.5f;
 

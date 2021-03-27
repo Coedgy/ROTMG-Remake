@@ -6,7 +6,7 @@ public class Bullet : MonoBehaviour
 {
     public float speed = 10f;
     public float range = 3f;
-    public int damage = 20;
+    public float damage = 20;
     public Rigidbody2D rb;
 
     Vector3 startPoint;
