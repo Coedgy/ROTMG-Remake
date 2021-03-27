@@ -4,9 +4,6 @@ using UnityEngine;
 
 public class PlayerWeapon : MonoBehaviour
 {
-
-    public GameObject testBullet;
-
     float timeStamp = 0;
 
     float timerLeft = 0;
@@ -26,8 +23,15 @@ public class PlayerWeapon : MonoBehaviour
     {
         if (Input.GetButton("Fire1") && timeStamp <= Time.time && !UIManager.MouseOverUI())
         {
-            Shoot();
-            timeStamp = Time.time + (60f / gameObject.GetComponent<Player>().attackSpeed /100);
+            if (gameObject.GetComponent<Player>().weapon != null)
+            {
+                Shoot();
+                timeStamp = Time.time + (60f / (gameObject.GetComponent<Player>().attackSpeed * gameObject.GetComponent<Player>().weapon.fireRate) / 100);
+            }
+            else
+            {
+                Debug.Log("No weapon equipped!");
+            }
         }
 
         if (timerOn)
@@ -50,13 +54,15 @@ public class PlayerWeapon : MonoBehaviour
         Vector3 difference = mousePosition - transform.position;
         float rotationZ = Mathf.Atan2(difference.y, difference.x) * Mathf.Rad2Deg;
 
-        GameObject bullet = Instantiate(testBullet, (transform.position + new Vector3(0, -0.3f, 0)), Quaternion.Euler(0.0f, 0.0f, rotationZ));
+        Weapon weapon = gameObject.GetComponent<Player>().weapon;
+
+        GameObject bullet = Instantiate(weapon.bulletPrefab, (transform.position + new Vector3(0, -0.3f, 0)), Quaternion.Euler(0.0f, 0.0f, rotationZ));
         Bullet script = bullet.GetComponent<Bullet>();
 
         //TestWeapon attributes
-        script.damage = Random.Range(20f,30f) * gameObject.GetComponent<Player>().damageMultiplier;
-        script.speed = 7.4f;
-        script.range = 2.5f;
+        script.damage = ((float)Random.Range(weapon.minDamage,weapon.maxDamage)) * gameObject.GetComponent<Player>().damageMultiplier;
+        script.speed = weapon.speed;
+        script.range = weapon.range;
 
         //Animation
         anim.SetFloat("MouseDirX", (Input.mousePosition.x / Camera.main.pixelWidth) - 0.5f);

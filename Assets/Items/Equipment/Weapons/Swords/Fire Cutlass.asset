@@ -21,13 +21,16 @@ MonoBehaviour:
   maxHealthBonus: 0
   maxManaBonus: 0
   attackBonus: 0
-  defenseBonus: 0
-  speedBonus: 0
+  defenseBonus: 10
+  speedBonus: 10
   dexterityBonus: 0
   wisdomBonus: 0
   vitalityBonus: 0
-  damage: 40
-  range: 5
-  cooldown: 0.1
+  minDamage: 20
+  maxDamage: 50
+  range: 2.4
+  fireRate: 0.8
   speed: 4
+  bulletPrefab: {fileID: 8008659876844695126, guid: 747a5e7ef1bff80448079fc16b9d571d,
+    type: 3}
   type: 4

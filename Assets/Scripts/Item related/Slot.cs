@@ -7,6 +7,7 @@ using TMPro;
 
 public class Slot : MonoBehaviour, IPointerClickHandler, IDragHandler, IBeginDragHandler, IEndDragHandler, IPointerEnterHandler, IPointerExitHandler
 {
+    public int slotNumber;
     public Item item;
     public bool isEquipmentSlot;
     public EquipmentSlotType equipmentSlotType;
@@ -92,10 +93,6 @@ public class Slot : MonoBehaviour, IPointerClickHandler, IDragHandler, IBeginDra
 
     private void Start()
     {
-        if (!isEquipmentSlot && Random.Range(0,2) == 1)
-        {
-            item = ItemDatabaseManager.GetRandomItem();
-        }
         UpdateSlot();
     }
 
@@ -232,6 +229,13 @@ public class Slot : MonoBehaviour, IPointerClickHandler, IDragHandler, IBeginDra
 
     }
 
+    public void SetItem(Item itemVar, int amountVar = 1)
+    {
+        item = itemVar;
+        amount = amountVar;
+        UpdateSlot();
+    }
+
     void SlotCheck()
     {
         for (int i = 0; i < RaycastMouse().Count; i++)
@@ -283,6 +287,15 @@ public class Slot : MonoBehaviour, IPointerClickHandler, IDragHandler, IBeginDra
 
         UpdateSlot();
         newSlot.UpdateSlot();
+
+        if (newSlot.isEquipmentSlot || isEquipmentSlot)
+        {
+            Player.script.SlotSwapped(true);
+        }
+        else
+        {
+            Player.script.SlotSwapped(false);
+        }
     }
 
     void DropEvent()
@@ -293,6 +306,7 @@ public class Slot : MonoBehaviour, IPointerClickHandler, IDragHandler, IBeginDra
     void ClearSlot()
     {
         item = null;
+        amount = 0;
         UpdateSlot();
     }
 

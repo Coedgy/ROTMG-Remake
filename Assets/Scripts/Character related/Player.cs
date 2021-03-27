@@ -6,6 +6,8 @@ using TMPro;
 
 public class Player : MonoBehaviour
 {
+    public static Player script;
+
     public int health;
     public TextMeshProUGUI healthBarText;
     public Slider healthBar;
@@ -23,6 +25,11 @@ public class Player : MonoBehaviour
 
     public Character character;
 
+    public Weapon weapon;
+    public Armor armor;
+    public Ability ability;
+    public Accessory accessory;
+
     public int maxHealth;
     public int maxMana;
 
@@ -33,6 +40,36 @@ public class Player : MonoBehaviour
     public float healthRegen;
     public float manaRegen;
 
+    [Header("Equipment Bonuses")]
+    public int maxHealthBonus;
+    public int maxManaBonus;
+    public int attackBonus;
+    public int defenseBonus;
+    public int speedBonus;
+    public int dexterityBonus;
+    public int wisdomBonus;
+    public int vitalityBonus;
+
+    public List<Slot> equipmentSlots = new List<Slot>();
+    public List<Slot> inventorySlots = new List<Slot>();
+
+    private void Awake()
+    {
+        script = this;
+
+        foreach (Slot slot in FindObjectsOfType<Slot>())
+        {
+            if (slot.isEquipmentSlot)
+            {
+                equipmentSlots.Add(slot);
+            }
+            else
+            {
+                inventorySlots.Add(slot);
+            }
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -42,6 +79,14 @@ public class Player : MonoBehaviour
         mana = maxMana;
 
         InvokeRepeating("PerSecondFunctions", 1f, 1f);
+
+        foreach (Slot slot in inventorySlots)
+        {
+            if (Random.Range(0,2) == 1)
+            {
+                slot.SetItem(ItemDatabaseManager.GetRandomItem());
+            }
+        }
     }
 
     // Update is called once per frame
@@ -82,18 +127,28 @@ public class Player : MonoBehaviour
 
     void UpdateValues()
     {
+        CheckEquipment();
+
         level = character.level;
         exp = character.exp;
         expNeeded = character.expNeeded;
-        maxMana = character.manaP;
-        maxHealth = character.life;
+        maxMana = character.manaP + maxManaBonus;
+        maxHealth = character.life + maxHealthBonus;
 
-        damageMultiplier = 0.5f + (character.attack) / 50f;
-        damageReduction = character.defense;
-        movementSpeed = 2.8f + 5.6f * ((character.speed) / 75f);
-        attackSpeed = 1f + 1.5f * ((character.dexterity) / 75f);
-        healthRegen = 1f + 0.24f * (character.vitality);
-        manaRegen = 0.5f + 0.12f * (character.wisdom);
+        damageMultiplier = 0.5f + (character.attack + attackBonus) / 50f;
+        damageReduction = character.defense + defenseBonus;
+        movementSpeed = 2.8f + 5.6f * ((character.speed + speedBonus) / 75f);
+        attackSpeed = 1f + 1.5f * ((character.dexterity + dexterityBonus) / 75f);
+        healthRegen = 1f + 0.24f * (character.vitality + vitalityBonus);
+        manaRegen = 0.5f + 0.12f * (character.wisdom + wisdomBonus);
+    }
+
+    public void SlotSwapped(bool equipmentRelated)
+    {
+        if (equipmentRelated)
+        {
+            UpdateValues();
+        }
     }
 
     public void TakeDamage(float damage)
@@ -105,11 +160,85 @@ public class Player : MonoBehaviour
         }
         health -= Mathf.CeilToInt(value);
     }
+
+    public void CheckEquipment()
+    {
+        //Calculate equipment bonuses
+        maxHealthBonus = 0;
+        maxManaBonus = 0;
+        attackBonus = 0;
+        defenseBonus = 0;
+        speedBonus = 0;
+        dexterityBonus = 0;
+        wisdomBonus = 0;
+        vitalityBonus = 0;
+        foreach (Slot slot in equipmentSlots)
+        {
+            if (!slot.isEmpty)
+            {
+                Equipment item = slot.item as Equipment;
+                maxHealthBonus += item.maxHealthBonus;
+                maxManaBonus += item.maxManaBonus;
+                attackBonus += item.attackBonus;
+                defenseBonus += item.defenseBonus;
+                speedBonus += item.speedBonus;
+                dexterityBonus += item.dexterityBonus;
+                wisdomBonus += item.wisdomBonus;
+                vitalityBonus += item.vitalityBonus;
+            }
+            if (slot.equipmentSlotType == EquipmentSlotType.Weapon)
+            {
+                if (slot.item != null)
+                {
+                    weapon = slot.item as Weapon;
+                }
+                else
+                {
+                    weapon = null;
+                }
+            }
+            else if (slot.equipmentSlotType == EquipmentSlotType.Armor)
+            {
+                if (slot.item != null)
+                {
+                    armor = slot.item as Armor;
+                }
+                else
+                {
+                    armor = null;
+                }
+            }
+            else if (slot.equipmentSlotType == EquipmentSlotType.Ability)
+            {
+                if (slot.item != null)
+                {
+                    ability = slot.item as Ability;
+                }
+                else
+                {
+                    ability = null;
+                }
+            }
+            else if (slot.equipmentSlotType == EquipmentSlotType.Accessory)
+            {
+                if (slot.item != null)
+                {
+                    accessory = slot.item as Accessory;
+                }
+                else
+                {
+                    accessory = null;
+                }
+            }
+        }
+    }
 }
 
 public class Character
 {
     public Class characterClass;
+
+    public InventoryData inventory;
 
     public int level;
     public int exp;
@@ -129,6 +258,8 @@ public class Character
         ClassValues def = new ClassValues(cClass);
 
         characterClass = cClass;
+
+        inventory = new InventoryData();
 
         level = 1;
         exp = 0;
@@ -167,6 +298,20 @@ public class Character
         {
             Debug.Log("Maximum level of 20 reached");
         }
+    }
+}
+
+public class InventoryData
+{
+    public List<int> slotNumber;
+    public List<int> itemID;
+    public List<int> amount;
+
+    public InventoryData()
+    {
+        slotNumber = new List<int>();
+        itemID = new List<int>();
+        amount = new List<int>();
     }
 }
 

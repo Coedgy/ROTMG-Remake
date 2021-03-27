@@ -1452,6 +1452,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0b53769526a1a54d9bc56dbe7905a8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  slotNumber: 2
   item: {fileID: 0}
   isEquipmentSlot: 1
   equipmentSlotType: 1
@@ -2160,6 +2161,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0b53769526a1a54d9bc56dbe7905a8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  slotNumber: 5
   item: {fileID: 0}
   isEquipmentSlot: 0
   equipmentSlotType: 0
@@ -2258,6 +2260,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0b53769526a1a54d9bc56dbe7905a8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  slotNumber: 8
   item: {fileID: 0}
   isEquipmentSlot: 0
   equipmentSlotType: 0
@@ -2439,6 +2442,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0b53769526a1a54d9bc56dbe7905a8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  slotNumber: 4
   item: {fileID: 0}
   isEquipmentSlot: 1
   equipmentSlotType: 3
@@ -2915,6 +2919,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0b53769526a1a54d9bc56dbe7905a8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  slotNumber: 12
   item: {fileID: 0}
   isEquipmentSlot: 0
   equipmentSlotType: 0
@@ -4314,6 +4319,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0b53769526a1a54d9bc56dbe7905a8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  slotNumber: 10
   item: {fileID: 0}
   isEquipmentSlot: 0
   equipmentSlotType: 0
@@ -4711,6 +4717,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0b53769526a1a54d9bc56dbe7905a8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  slotNumber: 6
   item: {fileID: 0}
   isEquipmentSlot: 0
   equipmentSlotType: 0
@@ -4883,6 +4890,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0b53769526a1a54d9bc56dbe7905a8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  slotNumber: 3
   item: {fileID: 0}
   isEquipmentSlot: 1
   equipmentSlotType: 2
@@ -5865,6 +5873,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0b53769526a1a54d9bc56dbe7905a8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  slotNumber: 7
   item: {fileID: 0}
   isEquipmentSlot: 0
   equipmentSlotType: 0
@@ -6469,6 +6478,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0b53769526a1a54d9bc56dbe7905a8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  slotNumber: 9
   item: {fileID: 0}
   isEquipmentSlot: 0
   equipmentSlotType: 0
@@ -7445,6 +7455,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0b53769526a1a54d9bc56dbe7905a8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  slotNumber: 1
   item: {fileID: 0}
   isEquipmentSlot: 1
   equipmentSlotType: 0
@@ -7633,6 +7644,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0b53769526a1a54d9bc56dbe7905a8c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  slotNumber: 11
   item: {fileID: 0}
   isEquipmentSlot: 0
   equipmentSlotType: 0
@@ -9342,7 +9354,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6ccbbf2c5032c54595c08c28bdcd9f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 3.5
 --- !u!61 &1960952966
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -9402,8 +9413,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4375fcc4088a796459f050bb5d7a3789, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  testBullet: {fileID: 8008659876844695126, guid: 747a5e7ef1bff80448079fc16b9d571d,
-    type: 3}
 --- !u!114 &1960952969
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9425,6 +9434,28 @@ MonoBehaviour:
   expText: {fileID: 629518775}
   levelText: {fileID: 1834619425}
   levelBar: {fileID: 666227498}
+  weapon: {fileID: 0}
+  armor: {fileID: 0}
+  ability: {fileID: 0}
+  accessory: {fileID: 0}
+  maxHealth: 0
+  maxMana: 0
+  damageMultiplier: 0
+  damageReduction: 0
+  movementSpeed: 0
+  attackSpeed: 0
+  healthRegen: 0
+  manaRegen: 0
+  maxHealthBonus: 0
+  maxManaBonus: 0
+  attackBonus: 0
+  defenseBonus: 0
+  speedBonus: 0
+  dexterityBonus: 0
+  wisdomBonus: 0
+  vitalityBonus: 0
+  equipmentSlots: []
+  inventorySlots: []
 --- !u!1 &1987659378
 GameObject:
   m_ObjectHideFlags: 0

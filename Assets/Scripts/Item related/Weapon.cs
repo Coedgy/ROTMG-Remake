@@ -4,10 +4,13 @@
 public class Weapon : Equipment
 {
     [Header("Weapon Values")]
-    public int damage;
+    public int minDamage;
+    public int maxDamage;
     public float range;
-    public float cooldown;
+    public float fireRate = 1.0f;
     public float speed;
+
+    public GameObject bulletPrefab;
 
     public WeaponType type;
 }
