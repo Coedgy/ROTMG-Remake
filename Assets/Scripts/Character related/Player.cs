@@ -1,8 +1,10 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Random = UnityEngine.Random;
 
 public class Player : MonoBehaviour
 {
@@ -50,6 +52,7 @@ public class Player : MonoBehaviour
     public int wisdomBonus;
     public int vitalityBonus;
 
+    public List<Slot> allSlots = new List<Slot>();
     public List<Slot> equipmentSlots = new List<Slot>();
     public List<Slot> inventorySlots = new List<Slot>();
 
@@ -58,6 +61,11 @@ public class Player : MonoBehaviour
         script = this;
 
         foreach (Slot slot in FindObjectsOfType<Slot>())
+        {
+            allSlots.Add(slot);
+        }
+        
+        foreach (Slot slot in allSlots)
         {
             if (slot.isEquipmentSlot)
             {
@@ -98,6 +106,18 @@ public class Player : MonoBehaviour
         {
             character.LevelUp();
             UpdateValues();
+        }
+        
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            SaveInventory();
+            Debug.Log("Inventory saved");
+        }
+        
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            LoadInventory();
+            Debug.Log("Inventory loaded");
         }
     }
 
@@ -151,6 +171,14 @@ public class Player : MonoBehaviour
         }
     }
 
+    void UpdateInventory()
+    {
+        foreach (Slot slot in allSlots)
+        {
+            slot.UpdateSlot();
+        }
+    }
+    
     public void TakeDamage(float damage)
     {
         float value = damage - damageReduction;
@@ -232,261 +260,50 @@ public class Player : MonoBehaviour
             }
         }
     }
-}
 
-public class Character
-{
-    public Class characterClass;
-
-    public InventoryData inventory;
-
-    public int level;
-    public int exp;
-    public int expNeeded;
-
-    public int life;
-    public int manaP;
-    public int attack;
-    public int defense;
-    public int speed;
-    public int dexterity;
-    public int wisdom;
-    public int vitality;
-
-    public Character(Class cClass)
+    public void SaveInventory()
     {
-        ClassValues def = new ClassValues(cClass);
-
-        characterClass = cClass;
-
-        inventory = new InventoryData();
-
-        level = 1;
-        exp = 0;
-        expNeeded = 50;
-
-        life = def.lifeBase;
-        manaP = def.manaPBase;
-        attack = def.attackBase;
-        defense = def.defenseBase;
-        speed = def.speedBase;
-        dexterity = def.dexterityBase;
-        wisdom = def.wisdomBase;
-        vitality = def.vitalityBase;
+        foreach (Slot slot in allSlots)
+        {
+            InventoryDataSlot dataSlot = character.inventory.inventorySlots[slot.slotNumber - 1];
+            dataSlot.amount = slot.amount;
+            if (slot.isEmpty)
+            {
+                dataSlot.itemID = 0;
+                dataSlot.amount = 0;
+            }
+            else
+            {
+                dataSlot.itemID = slot.item.ID;
+            }
+            if (dataSlot.slotNumber != slot.slotNumber)
+            {
+                throw new Exception("Tried to save data to wrong slotNumber! Expected slotNum:" + dataSlot.slotNumber + ". oldSlot number was: " + slot.slotNumber);
+            }
+        }
     }
 
-    public void LevelUp()
+    public void LoadInventory()
     {
-        if (level < 20)
+        foreach (Slot slot in allSlots)
         {
-            level++;
-            expNeeded = expNeeded + 100;
-            exp = 0;
+            InventoryDataSlot dataSlot = character.inventory.inventorySlots[slot.slotNumber - 1];
 
-            ClassValues def = new ClassValues(characterClass);
-
-            life += def.lifePL;
-            manaP += def.manaPPL;
-            attack += def.attackPL;
-            defense += def.defensePL;
-            speed += def.speedPL;
-            dexterity += def.dexterityPL;
-            wisdom += def.wisdomPL;
-            vitality += def.vitalityPL;
+            if (dataSlot.itemID == 0)
+            {
+                slot.item = null;
+                slot.amount = 0;
+            }
+            else
+            {
+                slot.item = ItemDatabaseManager.GetItemByID(dataSlot.itemID);
+                slot.amount = dataSlot.amount;
+            }
+            if (dataSlot.slotNumber != slot.slotNumber)
+            {
+                throw new Exception("Tried to save data to wrong slotNumber! Expected slotNum:" + slot.slotNumber + ". oldSlot number was: " + dataSlot.slotNumber);
+            }
         }
-        else
-        {
-            Debug.Log("Maximum level of 20 reached");
-        }
-    }
-}
-
-public class InventoryData
-{
-    public List<int> slotNumber;
-    public List<int> itemID;
-    public List<int> amount;
-
-    public InventoryData()
-    {
-        slotNumber = new List<int>();
-        itemID = new List<int>();
-        amount = new List<int>();
-    }
-}
-
-public enum Class
-{
-    Knight,
-    Archer,
-    Wizard
-}
-
-public enum WeaponType
-{
-    Wand,
-    Staff,
-    Bow,
-    Dagger,
-    Sword
-}
-
-public enum ArmorType
-{
-    Robe,
-    Hide,
-    Armor
-}
-
-public struct ClassValues
-{
-    //Base stats
-    public int lifeBase;
-    public int manaPBase;
-    public int attackBase;
-    public int defenseBase;
-    public int speedBase;
-    public int dexterityBase;
-    public int wisdomBase;
-    public int vitalityBase;
-
-    //Stat cap
-    public int maxLife;
-    public int maxMana;
-    public int maxAttack;
-    public int maxDefense;
-    public int maxSpeed;
-    public int maxDexterity;
-    public int maxWisdom;
-    public int maxVitality;
-
-    //Stat gain per level
-    public int lifePL;
-    public int manaPPL;
-    public int attackPL;
-    public int defensePL;
-    public int speedPL;
-    public int dexterityPL;
-    public int wisdomPL;
-    public int vitalityPL;
-
-    public ClassValues(Class cClass)
-    {
-        if (cClass == Class.Knight)
-        {
-            this.lifeBase = 200;
-            this.manaPBase = 100;
-            this.attackBase = 15;
-            this.defenseBase = 0;
-            this.speedBase = 7;
-            this.dexterityBase = 10;
-            this.vitalityBase = 10;
-            this.wisdomBase = 10;
-
-            this.maxLife = 770;
-            this.maxMana = 252;
-            this.maxAttack = 50;
-            this.maxDefense = 40;
-            this.maxSpeed = 50;
-            this.maxDexterity = 50;
-            this.maxVitality = 75;
-            this.maxWisdom = 50;
-
-            this.lifePL = 25;
-            this.manaPPL = 5;
-            this.attackPL = 2;
-            this.defensePL = 0;
-            this.speedPL = 1;
-            this.dexterityPL = 1;
-            this.vitalityPL = 2;
-            this.wisdomPL = 1;
-        }
-        else if (cClass == Class.Archer)
-        {
-            this.lifeBase = 200;
-            this.manaPBase = 100;
-            this.attackBase = 15;
-            this.defenseBase = 0;
-            this.speedBase = 7;
-            this.dexterityBase = 10;
-            this.vitalityBase = 10;
-            this.wisdomBase = 10;
-
-            this.maxLife = 770;
-            this.maxMana = 252;
-            this.maxAttack = 50;
-            this.maxDefense = 40;
-            this.maxSpeed = 50;
-            this.maxDexterity = 50;
-            this.maxVitality = 75;
-            this.maxWisdom = 50;
-
-            this.lifePL = 25;
-            this.manaPPL = 5;
-            this.attackPL = 2;
-            this.defensePL = 0;
-            this.speedPL = 1;
-            this.dexterityPL = 1;
-            this.vitalityPL = 2;
-            this.wisdomPL = 1;
-        }
-        else if (cClass == Class.Wizard)
-        {
-            this.lifeBase = 200;
-            this.manaPBase = 100;
-            this.attackBase = 15;
-            this.defenseBase = 0;
-            this.speedBase = 7;
-            this.dexterityBase = 10;
-            this.vitalityBase = 10;
-            this.wisdomBase = 10;
-
-            this.maxLife = 770;
-            this.maxMana = 252;
-            this.maxAttack = 50;
-            this.maxDefense = 40;
-            this.maxSpeed = 50;
-            this.maxDexterity = 50;
-            this.maxVitality = 75;
-            this.maxWisdom = 50;
-
-            this.lifePL = 25;
-            this.manaPPL = 5;
-            this.attackPL = 2;
-            this.defensePL = 0;
-            this.speedPL = 1;
-            this.dexterityPL = 1;
-            this.vitalityPL = 2;
-            this.wisdomPL = 1;
-        }
-        else
-        {
-            this.lifeBase = 0;
-            this.manaPBase = 0;
-            this.attackBase = 0;
-            this.defenseBase = 0;
-            this.speedBase = 0;
-            this.dexterityBase = 0;
-            this.vitalityBase = 0;
-            this.wisdomBase = 0;
-
-            this.maxLife = 0;
-            this.maxMana = 0;
-            this.maxAttack = 0;
-            this.maxDefense = 0;
-            this.maxSpeed = 0;
-            this.maxDexterity = 0;
-            this.maxVitality = 0;
-            this.maxWisdom = 0;
-
-            this.lifePL = 0;
-            this.manaPPL = 0;
-            this.attackPL = 0;
-            this.defensePL = 0;
-            this.speedPL = 0;
-            this.dexterityPL = 0;
-            this.vitalityPL = 0;
-            this.wisdomPL = 0;
-        }
+        UpdateInventory();
     }
 }

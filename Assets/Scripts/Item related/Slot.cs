@@ -208,6 +208,7 @@ public class Slot : MonoBehaviour, IPointerClickHandler, IDragHandler, IBeginDra
             {
                 //if item was dropped outside inventory panel, begin DropEvent
                 DropEvent();
+                iconRectTransform.anchoredPosition = originalPosition;
             }
             else if (slotFound)
             {
