@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -24,6 +23,9 @@ public class Player : MonoBehaviour
     public TextMeshProUGUI expText;
     public TextMeshProUGUI levelText;
     public Slider levelBar;
+
+    public GameObject playerListPanel;
+    public GameObject containerPanel;
 
     public Character character;
 
@@ -55,6 +57,7 @@ public class Player : MonoBehaviour
     public List<Slot> allSlots = new List<Slot>();
     public List<Slot> equipmentSlots = new List<Slot>();
     public List<Slot> inventorySlots = new List<Slot>();
+    public List<Slot> containerSlots = new List<Slot>();
 
     private void Awake()
     {
@@ -70,6 +73,10 @@ public class Player : MonoBehaviour
             if (slot.isEquipmentSlot)
             {
                 equipmentSlots.Add(slot);
+            }
+            else if (slot.isContainerSlot)
+            {
+                containerSlots.Add(slot);
             }
             else
             {
@@ -118,6 +125,18 @@ public class Player : MonoBehaviour
         {
             LoadInventory();
             Debug.Log("Inventory loaded");
+        }
+        
+        if (Input.GetKeyDown(KeyCode.U))
+        {
+            if (containerPanel.activeInHierarchy)
+            {
+                CloseContainerPanel();
+            }
+            else
+            {
+                OpenContainerPanel();
+            }
         }
     }
 
@@ -174,6 +193,17 @@ public class Player : MonoBehaviour
     void UpdateInventory()
     {
         foreach (Slot slot in allSlots)
+        {
+            if (!slot.isContainerSlot)
+            {
+                slot.UpdateSlot();
+            }
+        }
+    }
+
+    void UpdateContainer()
+    {
+        foreach (Slot slot in containerSlots)
         {
             slot.UpdateSlot();
         }
@@ -265,20 +295,23 @@ public class Player : MonoBehaviour
     {
         foreach (Slot slot in allSlots)
         {
-            InventoryDataSlot dataSlot = character.inventory.inventorySlots[slot.slotNumber - 1];
-            dataSlot.amount = slot.amount;
-            if (slot.isEmpty)
+            if (!slot.isContainerSlot)
             {
-                dataSlot.itemID = 0;
-                dataSlot.amount = 0;
-            }
-            else
-            {
-                dataSlot.itemID = slot.item.ID;
-            }
-            if (dataSlot.slotNumber != slot.slotNumber)
-            {
-                throw new Exception("Tried to save data to wrong slotNumber! Expected slotNum:" + dataSlot.slotNumber + ". oldSlot number was: " + slot.slotNumber);
+                InventoryDataSlot dataSlot = character.inventory.inventorySlots[slot.slotNumber - 1];
+                dataSlot.amount = slot.amount;
+                if (slot.isEmpty)
+                {
+                    dataSlot.itemID = 0;
+                    dataSlot.amount = 0;
+                }
+                else
+                {
+                    dataSlot.itemID = slot.item.ID;
+                }
+                if (dataSlot.slotNumber != slot.slotNumber)
+                {
+                    throw new Exception("Tried to save data to wrong slotNumber! Expected slotNum:" + dataSlot.slotNumber + ". oldSlot number was: " + slot.slotNumber);
+                }
             }
         }
     }
@@ -287,23 +320,53 @@ public class Player : MonoBehaviour
     {
         foreach (Slot slot in allSlots)
         {
-            InventoryDataSlot dataSlot = character.inventory.inventorySlots[slot.slotNumber - 1];
+            if (!slot.isContainerSlot)
+            {
+                InventoryDataSlot dataSlot = character.inventory.inventorySlots[slot.slotNumber - 1];
 
-            if (dataSlot.itemID == 0)
-            {
-                slot.item = null;
-                slot.amount = 0;
-            }
-            else
-            {
-                slot.item = ItemDatabaseManager.GetItemByID(dataSlot.itemID);
-                slot.amount = dataSlot.amount;
-            }
-            if (dataSlot.slotNumber != slot.slotNumber)
-            {
-                throw new Exception("Tried to save data to wrong slotNumber! Expected slotNum:" + slot.slotNumber + ". oldSlot number was: " + dataSlot.slotNumber);
+                if (dataSlot.itemID == 0)
+                {
+                    slot.item = null;
+                    slot.amount = 0;
+                }
+                else
+                {
+                    slot.item = ItemDatabaseManager.GetItemByID(dataSlot.itemID);
+                    slot.amount = dataSlot.amount;
+                }
+                if (dataSlot.slotNumber != slot.slotNumber)
+                {
+                    throw new Exception("Tried to save data to wrong slotNumber! Expected slotNum:" + slot.slotNumber + ". oldSlot number was: " + dataSlot.slotNumber);
+                }
             }
         }
         UpdateInventory();
+    }
+
+    public void SaveContainer()
+    {
+        
+    }
+
+    public void LoadContainer()
+    {
+        
+    }
+
+    public void OpenContainerPanel()
+    {
+        //TODO Make a function, which loads the data from container's containerData to container slots, the call UpdateContainer()
+        //TODO Maybe a "colliderInfo hit.GetComponent<Container>().container"? Then do a foreach loop to put data into it. Same for saving container data.
+        containerPanel.SetActive(true);
+        playerListPanel.SetActive(false);
+        
+        //TODO OpenContainer(container);
+        //TODO UpdateContainer();
+    }
+
+    public void CloseContainerPanel()
+    {
+        containerPanel.SetActive(false);
+        playerListPanel.SetActive(true);
     }
 }
