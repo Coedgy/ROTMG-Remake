@@ -59,7 +59,7 @@ public class Player : MonoBehaviour
     public List<Slot> allSlots = new List<Slot>();
 
     public List<Collider2D> triggerList = new List<Collider2D>();
-    private Container closestContainer;
+    public Container closestContainer;
 
     private void Awake()
     {
@@ -104,8 +104,7 @@ public class Player : MonoBehaviour
         
         if (Input.GetKeyDown(KeyCode.O))
         {
-            //SaveInventory();
-            Debug.Log("Inventory saved");
+            
         }
         
         if (Input.GetKeyDown(KeyCode.L))
@@ -114,17 +113,6 @@ public class Player : MonoBehaviour
             Debug.Log("Inventory loaded");
         }
         
-        // if (Input.GetKeyDown(KeyCode.U))
-        // {
-        //     if (containerPanel.activeInHierarchy)
-        //     {
-        //         CloseContainerPanel();
-        //     }
-        //     else
-        //     {
-        //         OpenContainerPanel();
-        //     }
-        // }
         CheckClosestContainer();
     }
 
@@ -200,6 +188,11 @@ public class Player : MonoBehaviour
         attackSpeed = 1f + 1.5f * ((character.dexterity + dexterityBonus) / 75f);
         healthRegen = 1f + 0.24f * (character.vitality + vitalityBonus);
         manaRegen = 0.5f + 0.12f * (character.wisdom + wisdomBonus);
+    }
+
+    public void GiveItem(Item item, int amount)
+    {
+        //TODO this, then make the key "O" give a random item to player. Then test what happens if you try to drop item into a full container
     }
 
     public void SlotSwapped(Slot oldSlot, Slot newSlot)

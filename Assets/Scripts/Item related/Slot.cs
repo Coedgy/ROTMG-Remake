@@ -306,7 +306,30 @@ public class Slot : MonoBehaviour, IPointerClickHandler, IDragHandler, IBeginDra
 
     void DropEvent()
     {
-        ClearSlot();
+        if (Player.script.containerOpen)
+        {
+            foreach (Slot slot in Player.script.allSlots)
+            {
+                if (slot.isContainerSlot)
+                {
+                    if (slot.isEmpty)
+                    {
+                        slot.amount = amount;
+                        slot.item = item;
+                        slot.UpdateSlot();
+                        ClearSlot();
+                        UpdateSlot();
+                        Player.script.SlotSwapped(this,slot);
+                        return;
+                    }
+                }
+            }
+        }
+        else
+        {
+            ContainerPrefabs.manager.CreateContainer(ContainerType.brown_bag, Player.script.transform.position, new List<int>(){item.ID}, new List<int>(){amount});
+            ClearSlot();
+        }
     }
 
     void ClearSlot()

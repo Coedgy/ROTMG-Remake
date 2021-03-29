@@ -14,9 +14,6 @@ public class Container : MonoBehaviour
         container = new ContainerData();
 
         timestamp = Time.time + lifetime;
-
-        container.containerSlots[0].itemID = 11;
-        container.containerSlots[0].amount = 1;
     }
 
     private void Update()
@@ -24,6 +21,14 @@ public class Container : MonoBehaviour
         if (Time.time > timestamp)
         {
             Destroy(gameObject);
+        }
+    }
+
+    public void AddItem()
+    {
+        foreach (ContainerDataSlot slot in container.containerSlots)
+        {
+            
         }
     }
 }
