@@ -301,14 +301,7 @@ public class Slot : MonoBehaviour, IPointerClickHandler, IDragHandler, IBeginDra
         UpdateSlot();
         newSlot.UpdateSlot();
 
-        if (newSlot.isEquipmentSlot || isEquipmentSlot)
-        {
-            Player.script.SlotSwapped(true);
-        }
-        else
-        {
-            Player.script.SlotSwapped(false);
-        }
+        Player.script.SlotSwapped(this,newSlot);
     }
 
     void DropEvent()

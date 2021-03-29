@@ -1,37 +1,31 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Container : MonoBehaviour
 {
     public ContainerData container;
-    
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
+    private void Awake()
     {
-        
+        container = new ContainerData();
     }
 }
 
 public class ContainerData
 {
-    public ContainerDataSlot[] inventorySlots;
+    public ContainerDataSlot[] containerSlots;
 
     public ContainerData()
     {
-        inventorySlots = new ContainerDataSlot[12];
-        for (int i = 0; i < inventorySlots.Length; i++)
+        containerSlots = new ContainerDataSlot[8];
+        for (int i = 0; i < containerSlots.Length; i++)
         {
-            inventorySlots[i] = new ContainerDataSlot();
-            ContainerDataSlot dataSlot = inventorySlots[i];
+            containerSlots[i] = new ContainerDataSlot();
+            ContainerDataSlot dataSlot = containerSlots[i];
             
-            dataSlot.slotNumber = i+1;
+            dataSlot.slotNumber = i+13;
             dataSlot.amount = 0;
             dataSlot.itemID = 0;
         }

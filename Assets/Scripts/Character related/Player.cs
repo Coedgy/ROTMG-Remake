@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -26,6 +27,7 @@ public class Player : MonoBehaviour
 
     public GameObject playerListPanel;
     public GameObject containerPanel;
+    public bool containerOpen;
 
     public Character character;
 
@@ -55,11 +57,9 @@ public class Player : MonoBehaviour
     public int vitalityBonus;
 
     public List<Slot> allSlots = new List<Slot>();
-    public List<Slot> equipmentSlots = new List<Slot>();
-    public List<Slot> inventorySlots = new List<Slot>();
-    public List<Slot> containerSlots = new List<Slot>();
-    
-    List<Collider2D> triggerList = new List<Collider2D>();
+
+    public List<Collider2D> triggerList = new List<Collider2D>();
+    private Container closestContainer;
 
     private void Awake()
     {
@@ -69,27 +69,12 @@ public class Player : MonoBehaviour
         {
             allSlots.Add(slot);
         }
-        
-        foreach (Slot slot in allSlots)
-        {
-            if (slot.isEquipmentSlot)
-            {
-                equipmentSlots.Add(slot);
-            }
-            else if (slot.isContainerSlot)
-            {
-                containerSlots.Add(slot);
-            }
-            else
-            {
-                inventorySlots.Add(slot);
-            }
-        }
     }
 
     // Start is called before the first frame update
     void Start()
     {
+        CloseContainerPanel();
         character = new Character(Class.Knight);
         UpdateValues();
         health = maxHealth;
@@ -97,9 +82,9 @@ public class Player : MonoBehaviour
 
         InvokeRepeating("PerSecondFunctions", 1f, 1f);
 
-        foreach (Slot slot in inventorySlots)
+        foreach (Slot slot in allSlots)
         {
-            if (Random.Range(0,2) == 1)
+            if (!slot.isContainerSlot && !slot.isEquipmentSlot && Random.Range(0,2) == 1)
             {
                 slot.SetItem(ItemDatabaseManager.GetRandomItem());
             }
@@ -119,7 +104,7 @@ public class Player : MonoBehaviour
         
         if (Input.GetKeyDown(KeyCode.O))
         {
-            SaveInventory();
+            //SaveInventory();
             Debug.Log("Inventory saved");
         }
         
@@ -129,15 +114,48 @@ public class Player : MonoBehaviour
             Debug.Log("Inventory loaded");
         }
         
-        if (Input.GetKeyDown(KeyCode.U))
+        // if (Input.GetKeyDown(KeyCode.U))
+        // {
+        //     if (containerPanel.activeInHierarchy)
+        //     {
+        //         CloseContainerPanel();
+        //     }
+        //     else
+        //     {
+        //         OpenContainerPanel();
+        //     }
+        // }
+        CheckClosestContainer();
+    }
+
+    void CheckClosestContainer()
+    {
+        if (containerOpen)
         {
-            if (containerPanel.activeInHierarchy)
+            float prevDistance = 999.0f;
+            foreach (Collider2D collider in triggerList)
             {
-                CloseContainerPanel();
-            }
-            else
-            {
-                OpenContainerPanel();
+                float distance = Vector3.Distance(collider.gameObject.transform.position, gameObject.transform.position);
+                if (distance < prevDistance)
+                {
+                    if (closestContainer == null)
+                    {
+                        closestContainer = collider.gameObject.GetComponent<Container>();
+                        prevDistance = distance;
+                    }
+                    else
+                    {
+                        if (closestContainer.GetInstanceID() != collider.gameObject.GetComponent<Container>().GetInstanceID())
+                        {
+                            //SaveContainer(closestContainer);
+                            closestContainer = collider.gameObject.GetComponent<Container>();
+                            LoadContainer(closestContainer);
+                        
+                            UpdateContainer();
+                        }
+                        prevDistance = distance;
+                    }
+                }
             }
         }
     }
@@ -184,11 +202,54 @@ public class Player : MonoBehaviour
         manaRegen = 0.5f + 0.12f * (character.wisdom + wisdomBonus);
     }
 
-    public void SlotSwapped(bool equipmentRelated)
+    public void SlotSwapped(Slot oldSlot, Slot newSlot)
     {
-        if (equipmentRelated)
+        if (newSlot.isEquipmentSlot || oldSlot.isEquipmentSlot)
         {
             UpdateValues();
+        }
+
+        SaveSlot(oldSlot);
+        SaveSlot(newSlot);
+    }
+
+    void SaveSlot(Slot slot)
+    {
+        if (slot.isContainerSlot)
+        {
+            ContainerDataSlot dataSlot = closestContainer.container.containerSlots[slot.slotNumber - 13];
+            if (slot.isEmpty)
+            {
+                dataSlot.itemID = 0;
+                dataSlot.amount = 0;
+            }
+            else
+            {
+                dataSlot.itemID = slot.item.ID;
+                dataSlot.amount = slot.amount;
+            }
+            if (dataSlot.slotNumber != slot.slotNumber)
+            {
+                throw new Exception("Tried to save data to wrong slotNumber! Expected slotNum:" + dataSlot.slotNumber + ". oldSlot number was: " + slot.slotNumber);
+            }
+        }
+        else
+        {
+            InventoryDataSlot dataSlot = character.inventory.inventorySlots[slot.slotNumber - 1];
+            dataSlot.amount = slot.amount;
+            if (slot.isEmpty)
+            {
+                dataSlot.itemID = 0;
+                dataSlot.amount = 0;
+            }
+            else
+            {
+                dataSlot.itemID = slot.item.ID;
+            }
+            if (dataSlot.slotNumber != slot.slotNumber)
+            {
+                throw new Exception("Tried to save data to wrong slotNumber! Expected slotNum:" + dataSlot.slotNumber + ". oldSlot number was: " + slot.slotNumber);
+            }
         }
     }
 
@@ -205,9 +266,12 @@ public class Player : MonoBehaviour
 
     void UpdateContainer()
     {
-        foreach (Slot slot in containerSlots)
+        foreach (Slot slot in allSlots)
         {
-            slot.UpdateSlot();
+            if (slot.isContainerSlot)
+            {
+                slot.UpdateSlot();
+            }
         }
     }
     
@@ -232,87 +296,65 @@ public class Player : MonoBehaviour
         dexterityBonus = 0;
         wisdomBonus = 0;
         vitalityBonus = 0;
-        foreach (Slot slot in equipmentSlots)
-        {
-            if (!slot.isEmpty)
-            {
-                Equipment item = slot.item as Equipment;
-                maxHealthBonus += item.maxHealthBonus;
-                maxManaBonus += item.maxManaBonus;
-                attackBonus += item.attackBonus;
-                defenseBonus += item.defenseBonus;
-                speedBonus += item.speedBonus;
-                dexterityBonus += item.dexterityBonus;
-                wisdomBonus += item.wisdomBonus;
-                vitalityBonus += item.vitalityBonus;
-            }
-            if (slot.equipmentSlotType == EquipmentSlotType.Weapon)
-            {
-                if (slot.item != null)
-                {
-                    weapon = slot.item as Weapon;
-                }
-                else
-                {
-                    weapon = null;
-                }
-            }
-            else if (slot.equipmentSlotType == EquipmentSlotType.Armor)
-            {
-                if (slot.item != null)
-                {
-                    armor = slot.item as Armor;
-                }
-                else
-                {
-                    armor = null;
-                }
-            }
-            else if (slot.equipmentSlotType == EquipmentSlotType.Ability)
-            {
-                if (slot.item != null)
-                {
-                    ability = slot.item as Ability;
-                }
-                else
-                {
-                    ability = null;
-                }
-            }
-            else if (slot.equipmentSlotType == EquipmentSlotType.Accessory)
-            {
-                if (slot.item != null)
-                {
-                    accessory = slot.item as Accessory;
-                }
-                else
-                {
-                    accessory = null;
-                }
-            }
-        }
-    }
-
-    public void SaveInventory()
-    {
         foreach (Slot slot in allSlots)
         {
-            if (!slot.isContainerSlot)
+            if (slot.isEquipmentSlot)
             {
-                InventoryDataSlot dataSlot = character.inventory.inventorySlots[slot.slotNumber - 1];
-                dataSlot.amount = slot.amount;
-                if (slot.isEmpty)
+                if (!slot.isEmpty)
                 {
-                    dataSlot.itemID = 0;
-                    dataSlot.amount = 0;
+                    Equipment item = slot.item as Equipment;
+                    maxHealthBonus += item.maxHealthBonus;
+                    maxManaBonus += item.maxManaBonus;
+                    attackBonus += item.attackBonus;
+                    defenseBonus += item.defenseBonus;
+                    speedBonus += item.speedBonus;
+                    dexterityBonus += item.dexterityBonus;
+                    wisdomBonus += item.wisdomBonus;
+                    vitalityBonus += item.vitalityBonus;
                 }
-                else
+                if (slot.equipmentSlotType == EquipmentSlotType.Weapon)
                 {
-                    dataSlot.itemID = slot.item.ID;
+                    if (slot.item != null)
+                    {
+                        weapon = slot.item as Weapon;
+                    }
+                    else
+                    {
+                        weapon = null;
+                    }
                 }
-                if (dataSlot.slotNumber != slot.slotNumber)
+                else if (slot.equipmentSlotType == EquipmentSlotType.Armor)
                 {
-                    throw new Exception("Tried to save data to wrong slotNumber! Expected slotNum:" + dataSlot.slotNumber + ". oldSlot number was: " + slot.slotNumber);
+                    if (slot.item != null)
+                    {
+                        armor = slot.item as Armor;
+                    }
+                    else
+                    {
+                        armor = null;
+                    }
+                }
+                else if (slot.equipmentSlotType == EquipmentSlotType.Ability)
+                {
+                    if (slot.item != null)
+                    {
+                        ability = slot.item as Ability;
+                    }
+                    else
+                    {
+                        ability = null;
+                    }
+                }
+                else if (slot.equipmentSlotType == EquipmentSlotType.Accessory)
+                {
+                    if (slot.item != null)
+                    {
+                        accessory = slot.item as Accessory;
+                    }
+                    else
+                    {
+                        accessory = null;
+                    }
                 }
             }
         }
@@ -338,54 +380,58 @@ public class Player : MonoBehaviour
                 }
                 if (dataSlot.slotNumber != slot.slotNumber)
                 {
-                    throw new Exception("Tried to save data to wrong slotNumber! Expected slotNum:" + slot.slotNumber + ". oldSlot number was: " + dataSlot.slotNumber);
+                    throw new Exception("Tried to load data to wrong slotNumber! Expected slotNum:" + slot.slotNumber + ". oldSlot number was: " + dataSlot.slotNumber);
                 }
             }
         }
         UpdateInventory();
     }
 
-    public void SaveContainer()
+    public void LoadContainer(Container container)
     {
-        
-    }
-
-    public void LoadContainer()
-    {
-        
+        foreach (Slot slot in allSlots)
+        {
+            if (slot.isContainerSlot)
+            {
+                ContainerDataSlot dataSlot = container.container.containerSlots[slot.slotNumber - 13];
+                if (dataSlot.itemID == 0)
+                {
+                    slot.item = null;
+                    slot.amount = 0;
+                }
+                else
+                {
+                    slot.item = ItemDatabaseManager.GetItemByID(dataSlot.itemID);
+                    slot.amount = dataSlot.amount;
+                }
+                if (dataSlot.slotNumber != slot.slotNumber)
+                {
+                    throw new Exception("Tried to load data to wrong slotNumber! Expected slotNum:" + slot.slotNumber + ". oldSlot number was: " + dataSlot.slotNumber);
+                }
+            }
+        }
+        UpdateContainer();
     }
 
     public void OpenContainerPanel()
     {
-        //TODO Make a function, which loads the data from container's containerData to container slots, the call UpdateContainer()
-        //TODO Maybe a "colliderInfo hit.GetComponent<Container>().container"? Then do a foreach loop to put data into it. Same for saving container data.
         containerPanel.SetActive(true);
         playerListPanel.SetActive(false);
+        containerOpen = true;
+
+        CheckClosestContainer();
         
-        //TODO OpenContainer(container);
-        //TODO UpdateContainer();
+        if (closestContainer != null)
+        {
+            LoadContainer(closestContainer);
+        }
     }
 
     public void CloseContainerPanel()
     {
         containerPanel.SetActive(false);
         playerListPanel.SetActive(true);
-    }
-
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        Debug.Log(other.gameObject);
-        if (!triggerList.Contains(other) && other.gameObject.GetComponent<Container>())
-        {
-            triggerList.Add(other);
-        }
-    }
-
-    private void OnTriggerExit2D(Collider2D other)
-    {
-        if (triggerList.Contains(other))
-        {
-            triggerList.Remove(other);
-        }
+        containerOpen = false;
+        closestContainer = null;
     }
 }
