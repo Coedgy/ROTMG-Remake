@@ -14,6 +14,9 @@ public class Container : MonoBehaviour
         container = new ContainerData();
 
         timestamp = Time.time + lifetime;
+
+        container.containerSlots[0].itemID = 11;
+        container.containerSlots[0].amount = 1;
     }
 
     private void Update()

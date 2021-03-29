@@ -49,14 +49,14 @@ public class PlayerWeapon : MonoBehaviour
     {
         mousePosition = Input.mousePosition;
         mousePosition.z = Camera.main.nearClipPlane;
-        mousePosition = Camera.main.ScreenToWorldPoint(mousePosition) + new Vector3(0, 0.3f, 0);
+        mousePosition = Camera.main.ScreenToWorldPoint(mousePosition) + new Vector3(0, -0.4f, 0);
 
         Vector3 difference = mousePosition - transform.position;
         float rotationZ = Mathf.Atan2(difference.y, difference.x) * Mathf.Rad2Deg;
 
         Weapon weapon = gameObject.GetComponent<Player>().weapon;
 
-        GameObject bullet = Instantiate(weapon.bulletPrefab, (transform.position + new Vector3(0, -0.3f, 0)), Quaternion.Euler(0.0f, 0.0f, rotationZ));
+        GameObject bullet = Instantiate(weapon.bulletPrefab, (transform.position + new Vector3(0, 0.4f, 0)), Quaternion.Euler(0.0f, 0.0f, rotationZ));
         Bullet script = bullet.GetComponent<Bullet>();
 
         //TestWeapon attributes
