@@ -58,6 +58,8 @@ public class Player : MonoBehaviour
     public List<Slot> equipmentSlots = new List<Slot>();
     public List<Slot> inventorySlots = new List<Slot>();
     public List<Slot> containerSlots = new List<Slot>();
+    
+    List<Collider2D> triggerList = new List<Collider2D>();
 
     private void Awake()
     {
@@ -368,5 +370,22 @@ public class Player : MonoBehaviour
     {
         containerPanel.SetActive(false);
         playerListPanel.SetActive(true);
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        Debug.Log(other.gameObject);
+        if (!triggerList.Contains(other) && other.gameObject.GetComponent<Container>())
+        {
+            triggerList.Add(other);
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (triggerList.Contains(other))
+        {
+            triggerList.Remove(other);
+        }
     }
 }
