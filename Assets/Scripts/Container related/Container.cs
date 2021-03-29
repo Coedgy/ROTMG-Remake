@@ -6,10 +6,22 @@ using UnityEngine;
 public class Container : MonoBehaviour
 {
     public ContainerData container;
+    public int lifetime;
+    private float timestamp;
 
     private void Awake()
     {
         container = new ContainerData();
+
+        timestamp = Time.time + lifetime;
+    }
+
+    private void Update()
+    {
+        if (Time.time > timestamp)
+        {
+            Destroy(gameObject);
+        }
     }
 }
 

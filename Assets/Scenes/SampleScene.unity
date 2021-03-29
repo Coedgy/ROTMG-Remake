@@ -2764,6 +2764,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: acf3148f06923e347ba281d9250b2ea4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lifetime: 20
 --- !u!212 &566358381
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -11375,9 +11376,6 @@ MonoBehaviour:
   wisdomBonus: 0
   vitalityBonus: 0
   allSlots: []
-  equipmentSlots: []
-  inventorySlots: []
-  containerSlots: []
   triggerList: []
 --- !u!1 &1981699414
 GameObject:
@@ -11410,6 +11408,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: acf3148f06923e347ba281d9250b2ea4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lifetime: 120
 --- !u!212 &1981699416
 SpriteRenderer:
   m_ObjectHideFlags: 0
