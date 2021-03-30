@@ -24,12 +24,18 @@ public class Container : MonoBehaviour
         }
     }
 
-    public void AddItem()
+    public bool AddItem(int itemID, int amount)
     {
         foreach (ContainerDataSlot slot in container.containerSlots)
         {
-            
+            if (slot.amount == 0)
+            {
+                slot.itemID = itemID;
+                slot.amount = amount;
+                return true;
+            }
         }
+        return false;
     }
 }
 

@@ -34,7 +34,7 @@ public class Bullet : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D hitInfo)
     {
-        if (hitInfo.gameObject.GetComponent<Player>() || hitInfo.gameObject.GetComponent<Bullet>() || hitInfo.gameObject.GetComponent<ContainerScan>())
+        if (hitInfo.gameObject.GetComponent<Player>() || hitInfo.gameObject.GetComponent<Bullet>() || hitInfo.gameObject.GetComponent<ContainerScan>() || hitInfo.gameObject.GetComponent<Container>())
         {
             return;
         }

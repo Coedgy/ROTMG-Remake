@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -69,6 +69,7 @@ public class Player : MonoBehaviour
         {
             allSlots.Add(slot);
         }
+        allSlots = allSlots.OrderBy(slot => slot.slotNumber).ToList();
     }
 
     // Start is called before the first frame update
@@ -104,7 +105,10 @@ public class Player : MonoBehaviour
         
         if (Input.GetKeyDown(KeyCode.O))
         {
-            
+            if (!GiveItem(ItemDatabaseManager.GetRandomItem(), 1))
+            {
+                Debug.Log("Inventory full");
+            }
         }
         
         if (Input.GetKeyDown(KeyCode.L))
@@ -190,9 +194,46 @@ public class Player : MonoBehaviour
         manaRegen = 0.5f + 0.12f * (character.wisdom + wisdomBonus);
     }
 
-    public void GiveItem(Item item, int amount)
+    public bool GiveItem(Item item, int amount)
     {
-        //TODO this, then make the key "O" give a random item to player. Then test what happens if you try to drop item into a full container
+        foreach (Slot slot in allSlots)
+        {
+            if (!slot.isContainerSlot && !slot.isEquipmentSlot)
+            {
+                if (slot.isEmpty)
+                {
+                    slot.item = item;
+                    slot.amount = amount;
+                    slot.UpdateSlot();
+                    SaveSlot(slot);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public bool AddItemToOpenContainer(Item item, int amount)
+    {
+        if (containerOpen)
+        {
+            foreach (Slot slot in allSlots)
+            {
+                if (slot.isContainerSlot)
+                {
+                    if (slot.isEmpty)
+                    {
+                        slot.amount = amount;
+                        slot.item = item;
+                        slot.UpdateSlot();
+                        slot.UpdateSlot();
+                        SaveSlot(slot);
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     public void SlotSwapped(Slot oldSlot, Slot newSlot)
@@ -206,7 +247,7 @@ public class Player : MonoBehaviour
         SaveSlot(newSlot);
     }
 
-    void SaveSlot(Slot slot)
+    public void SaveSlot(Slot slot)
     {
         if (slot.isContainerSlot)
         {

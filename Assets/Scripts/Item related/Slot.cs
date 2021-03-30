@@ -306,24 +306,10 @@ public class Slot : MonoBehaviour, IPointerClickHandler, IDragHandler, IBeginDra
 
     void DropEvent()
     {
-        if (Player.script.containerOpen)
+        if (Player.script.AddItemToOpenContainer(item, amount))
         {
-            foreach (Slot slot in Player.script.allSlots)
-            {
-                if (slot.isContainerSlot)
-                {
-                    if (slot.isEmpty)
-                    {
-                        slot.amount = amount;
-                        slot.item = item;
-                        slot.UpdateSlot();
-                        ClearSlot();
-                        UpdateSlot();
-                        Player.script.SlotSwapped(this,slot);
-                        return;
-                    }
-                }
-            }
+            ClearSlot();
+            UpdateSlot();
         }
         else
         {
@@ -337,6 +323,7 @@ public class Slot : MonoBehaviour, IPointerClickHandler, IDragHandler, IBeginDra
         item = null;
         amount = 0;
         UpdateSlot();
+        Player.script.SaveSlot(this);
     }
 
     public void OnPointerEnter(PointerEventData eventData)
