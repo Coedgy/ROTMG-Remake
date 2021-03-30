@@ -13,3 +13,4 @@ MonoBehaviour:
   m_Name: Queen
   m_EditorClassIdentifier: 
   lootList: []
+  damageTreshold: 0
