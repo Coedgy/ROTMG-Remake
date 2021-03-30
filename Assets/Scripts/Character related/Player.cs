@@ -226,8 +226,8 @@ public class Player : MonoBehaviour
                         slot.amount = amount;
                         slot.item = item;
                         slot.UpdateSlot();
-                        slot.UpdateSlot();
                         SaveSlot(slot);
+                        closestContainer.CheckBagType();
                         return true;
                     }
                 }

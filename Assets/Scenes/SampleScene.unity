@@ -687,6 +687,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   brown_bag: {fileID: 581241457711878588, guid: d869e4cd06ca2084da7d005f5cd25902,
     type: 3}
+  purple_bag: {fileID: 581241457711878588, guid: ab6285b579e4a0642b0d994133325a18,
+    type: 3}
   white_bag: {fileID: 4929346497407101034, guid: cc655f037b59d5442be7855b8306a58f,
     type: 3}
 --- !u!1 &231030088
@@ -2781,6 +2783,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: acf3148f06923e347ba281d9250b2ea4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  type: 0
   lifetime: 60
 --- !u!212 &566358381
 SpriteRenderer:
@@ -11426,6 +11429,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: acf3148f06923e347ba281d9250b2ea4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  type: 2
   lifetime: 120
 --- !u!212 &1981699416
 SpriteRenderer:

@@ -8,6 +8,7 @@ public class ContainerPrefabs : MonoBehaviour
     public static ContainerPrefabs manager;
     
     public GameObject brown_bag;
+    public GameObject purple_bag;
     public GameObject white_bag;
 
     private void Awake()
@@ -26,6 +27,10 @@ public class ContainerPrefabs : MonoBehaviour
         if (type == ContainerType.brown_bag)
         {
             bagPrefab = brown_bag;
+        }
+        else if (type == ContainerType.purple_bag)
+        {
+            bagPrefab = purple_bag;
         }
         else if (type == ContainerType.white_bag)
         {
@@ -59,5 +64,6 @@ public class ContainerPrefabs : MonoBehaviour
 public enum ContainerType
 {
     brown_bag,
+    purple_bag,
     white_bag
 }

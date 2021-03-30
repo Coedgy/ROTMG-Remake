@@ -18,6 +18,7 @@ MonoBehaviour:
   artwork: {fileID: 6454297184081698983, guid: 8415e57776c05084f8d66e01ac0e2143, type: 3}
   stackable: 0
   maxStack: 1
+  tradable: 0
   maxHealthBonus: 0
   maxManaBonus: 0
   attackBonus: 0

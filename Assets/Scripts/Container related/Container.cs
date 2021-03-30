@@ -6,6 +6,9 @@ using UnityEngine;
 public class Container : MonoBehaviour
 {
     public ContainerData container;
+
+    public ContainerType type;
+
     public int lifetime;
     private float timestamp;
 
@@ -24,6 +27,26 @@ public class Container : MonoBehaviour
         }
     }
 
+    public void CheckBagType()
+    {
+        if (type == ContainerType.brown_bag)
+        {
+            foreach (ContainerDataSlot slot in container.containerSlots)
+            {
+                if (slot.itemID == 0)
+                {
+                    return;
+                }
+                if (!ItemDatabaseManager.GetItemByID(slot.itemID).tradable)
+                {
+                    type = ContainerType.purple_bag;
+                    gameObject.GetComponent<SpriteRenderer>().sprite =
+                        ContainerPrefabs.manager.purple_bag.GetComponent<SpriteRenderer>().sprite;
+                }
+            }
+        }
+    }
+    
     public bool AddItem(int itemID, int amount)
     {
         foreach (ContainerDataSlot slot in container.containerSlots)
@@ -32,6 +55,7 @@ public class Container : MonoBehaviour
             {
                 slot.itemID = itemID;
                 slot.amount = amount;
+                CheckBagType();
                 return true;
             }
         }
