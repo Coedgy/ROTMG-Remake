@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Linq;
 using UnityEngine;
 
 public class Container : MonoBehaviour
@@ -11,6 +9,8 @@ public class Container : MonoBehaviour
 
     public int lifetime;
     private float timestamp;
+    
+    //TODO When you know how you are going to keep track of different players, implement a variable that marks who can see the container
 
     private void Awake()
     {
@@ -22,6 +22,14 @@ public class Container : MonoBehaviour
     private void Update()
     {
         if (Time.time > timestamp)
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    public void EmptyCheck()
+    {
+        if (container.containerSlots.All(slot => slot.amount == 0))
         {
             Destroy(gameObject);
         }

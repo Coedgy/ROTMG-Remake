@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class ContainerPrefabs : MonoBehaviour
@@ -19,7 +17,7 @@ public class ContainerPrefabs : MonoBehaviour
         }
     }
 
-    public void CreateContainer(ContainerType type, Vector3 position, List<int> items, List<int> amounts = null)
+    public void CreateContainer(ContainerType type, Vector3 position, List<int> items, List<int> amounts = null) //TODO add the parameter here
     {
         bool noAmounts = amounts == null;
         GameObject bagPrefab;

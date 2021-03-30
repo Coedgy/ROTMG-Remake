@@ -245,6 +245,11 @@ public class Player : MonoBehaviour
 
         SaveSlot(oldSlot);
         SaveSlot(newSlot);
+
+        if (oldSlot.isContainerSlot)
+        {
+            closestContainer.EmptyCheck();
+        }
     }
 
     public void SaveSlot(Slot slot)
