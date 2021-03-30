@@ -65,8 +65,8 @@ public class PlayerWeapon : MonoBehaviour
         script.range = weapon.range;
 
         //Animation
-        anim.SetFloat("MouseDirX", (Input.mousePosition.x / Camera.main.pixelWidth) - 0.5f);
-        anim.SetFloat("MouseDirY", (Input.mousePosition.y / Camera.main.pixelHeight) - 0.5f);
+        anim.SetFloat("MouseDirX", (Input.mousePosition.x / Camera.main.pixelWidth) - 0.406f);
+        anim.SetFloat("MouseDirY", (Input.mousePosition.y / Camera.main.pixelHeight) - 0.54f);
         anim.SetTrigger("ShootEvent");
         timerOn = true;
         timerLeft = 1f;
