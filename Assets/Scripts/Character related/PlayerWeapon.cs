@@ -63,6 +63,7 @@ public class PlayerWeapon : MonoBehaviour
         script.damage = ((float)Random.Range(weapon.minDamage,weapon.maxDamage)) * gameObject.GetComponent<Player>().damageMultiplier;
         script.speed = weapon.speed;
         script.range = weapon.range;
+        script.owner = gameObject.GetComponent<Player>();
 
         //Animation
         anim.SetFloat("MouseDirX", (Input.mousePosition.x / Camera.main.pixelWidth) - 0.406f);

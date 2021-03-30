@@ -77,6 +77,13 @@ public class ItemDatabaseManager : MonoBehaviour
         return null;
     }
 
+    public static Dictionary<int, int> ConvertLootTable(LootTable lootTable)
+    {
+        Dictionary<int, int> result = new Dictionary<int, int>();
+
+        return result;
+    }
+
     public static Item GetRandomItemByList(List<Item> list)
     {
         return list[Random.Range(0, list.Count)];

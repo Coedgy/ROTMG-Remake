@@ -7,6 +7,7 @@ public class LootTable : ScriptableObject
 {
     public List<LootTableEntry> lootList;
     public float damageTreshold;
+    public bool tresholdAsPercentage = false;
 }
 
 [Serializable]
