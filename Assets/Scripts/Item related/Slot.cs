@@ -313,6 +313,10 @@ public class Slot : MonoBehaviour, IPointerClickHandler, IDragHandler, IBeginDra
         }
         else
         {
+            if (Player.script.containerOpen)
+            {
+                return;
+            }
             if (item.tradable)
             {
                 ContainerPrefabs.manager.CreateContainer(ContainerType.brown_bag, Player.script.transform.position, new List<int>(){item.ID}, new List<int>(){amount});
