@@ -113,8 +113,10 @@ public class Player : MonoBehaviour
         
         if (Input.GetKeyDown(KeyCode.L))
         {
-            LoadInventory();
-            Debug.Log("Inventory loaded");
+            if (!GiveItem(ItemDatabaseManager.GetItemByID(11), 1))
+            {
+                Debug.Log("Inventory full");
+            }
         }
         
         CheckClosestContainer();

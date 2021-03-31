@@ -40,11 +40,41 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    ContainerType GetContainerType(List<int> itemList)
+    ContainerType GetContainerType(List<int> itemList, List<int> amountList)
     {
         //TODO make a list of lootbag item containerType enums, then remove all that arent in the list
+
+        ContainerType[] types = new ContainerType[lootTable.lootList.Count];
+        int[] items = new int[lootTable.lootList.Count];
+        int[] amounts = new int[lootTable.lootList.Count];
+
+        for (int i = 0; i < lootTable.lootList.Count; i++)
+        {
+            LootTableEntry entry = lootTable.lootList[i];
+            types[i] = entry.containerType;
+            items[i] = entry.itemID;
+            amounts[i] = entry.amount;
+        }
+
+        ContainerType biggest = 0;
+        for (int i = 0; i < itemList.Count; i++)
+        {
+            for (int j = 0; j < items.Length; j++)
+            {
+                if (itemList[i] == items[j])
+                {
+                    if (amountList[i] == amounts[j])
+                    {
+                        if (types[j] > biggest)
+                        {
+                            biggest = types[j];
+                        }
+                    }
+                }
+            }
+        }
         
-        return ContainerType.brown_bag;
+        return biggest;
     }
     
     void Die()
@@ -67,7 +97,7 @@ public class Enemy : MonoBehaviour
                 List<int> itemIDlist = itemList.Keys.ToList();
                 List<int> itemAmountList = itemList.Values.ToList();
 
-                ContainerPrefabs.manager.CreateContainer(GetContainerType(itemIDlist), gameObject.transform.position, itemIDlist, itemAmountList); //TODO Change the bag depending on loot
+                ContainerPrefabs.manager.CreateContainer(GetContainerType(itemIDlist, itemAmountList), gameObject.transform.position, itemIDlist, itemAmountList); //TODO Change the bag depending on loot
             }
         }
         Debug.Log(gameObject + " was killed");
