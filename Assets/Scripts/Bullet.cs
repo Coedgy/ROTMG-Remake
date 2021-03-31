@@ -11,6 +11,8 @@ public class Bullet : MonoBehaviour
 
     Vector3 startPoint;
 
+    public Player owner;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -34,7 +36,7 @@ public class Bullet : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D hitInfo)
     {
-        if (hitInfo.gameObject.GetComponent<Player>() || hitInfo.gameObject.GetComponent<Bullet>())
+        if (hitInfo.gameObject.GetComponent<Player>() || hitInfo.gameObject.GetComponent<Bullet>() || hitInfo.gameObject.GetComponent<ContainerScan>() || hitInfo.gameObject.GetComponent<Container>())
         {
             return;
         }
@@ -43,7 +45,7 @@ public class Bullet : MonoBehaviour
         Enemy enemy = hitInfo.GetComponent<Enemy>();
         if (enemy != null)
         {
-            enemy.TakeDamage(damage);
+            enemy.TakeDamage(damage, owner);
         }
         Destroy(gameObject);
     }

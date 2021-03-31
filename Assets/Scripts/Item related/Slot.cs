@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
@@ -9,8 +8,12 @@ public class Slot : MonoBehaviour, IPointerClickHandler, IDragHandler, IBeginDra
 {
     public int slotNumber;
     public Item item;
+    
     public bool isEquipmentSlot;
     public EquipmentSlotType equipmentSlotType;
+
+    public bool isContainerSlot;
+    
     public int amount;
 
     public bool isEmpty;
@@ -57,8 +60,11 @@ public class Slot : MonoBehaviour, IPointerClickHandler, IDragHandler, IBeginDra
     private void Awake()
     {
         slotPanel = transform.GetChild(0).gameObject;
-        slotText = transform.GetChild(1).gameObject.GetComponent<TextMeshProUGUI>();
-
+        if (!isContainerSlot)
+        {
+            slotText = transform.GetChild(1).gameObject.GetComponent<TextMeshProUGUI>();
+        }
+        
         slotPanelCopy = Instantiate(slotPanel);
         slotPanelCopy.transform.SetParent(gameObject.transform);
         slotPanelCopy.transform.position = slotPanel.transform.position;
@@ -123,14 +129,20 @@ public class Slot : MonoBehaviour, IPointerClickHandler, IDragHandler, IBeginDra
         if (isEmpty)
         {
             slotPanel.GetComponent<Image>().color = slotOriginalColor;
-            slotText.gameObject.SetActive(true);
+            if (!isContainerSlot)
+            {
+                slotText.gameObject.SetActive(true);
+            }
             slotImage.sprite = null;
             slotPanelCopy.SetActive(false);
         }
         else
         {
             slotPanel.GetComponent<Image>().color = slotFullColor;
-            slotText.gameObject.SetActive(false);
+            if (!isContainerSlot)
+            {
+                slotText.gameObject.SetActive(false);
+            }
             slotPanelCopy.SetActive(true);
             slotImage.sprite = item.artwork;
         }
@@ -208,6 +220,7 @@ public class Slot : MonoBehaviour, IPointerClickHandler, IDragHandler, IBeginDra
             {
                 //if item was dropped outside inventory panel, begin DropEvent
                 DropEvent();
+                iconRectTransform.anchoredPosition = originalPosition;
             }
             else if (slotFound)
             {
@@ -288,19 +301,38 @@ public class Slot : MonoBehaviour, IPointerClickHandler, IDragHandler, IBeginDra
         UpdateSlot();
         newSlot.UpdateSlot();
 
-        if (newSlot.isEquipmentSlot || isEquipmentSlot)
-        {
-            Player.script.SlotSwapped(true);
-        }
-        else
-        {
-            Player.script.SlotSwapped(false);
-        }
+        Player.script.SlotSwapped(this,newSlot);
     }
 
     void DropEvent()
     {
-        ClearSlot();
+        if (Player.script.AddItemToOpenContainer(item, amount))
+        {
+            ClearSlot();
+            UpdateSlot();
+        }
+        else
+        {
+            if (Player.script.containerOpen)
+            {
+                return;
+            }
+            if (item.tradable)
+            {
+                ContainerPrefabs.manager.CreateContainer(ContainerType.brown_bag, Player.script.transform.position, new List<int>(){item.ID}, new List<int>(){amount});
+            }
+            else
+            {
+                ContainerPrefabs.manager.CreateContainer(ContainerType.purple_bag, Player.script.transform.position, new List<int>(){item.ID}, new List<int>(){amount});
+            }
+            
+            ClearSlot();
+        }
+
+        if (isEquipmentSlot)
+        {
+            Player.script.UpdateValues();
+        }
     }
 
     void ClearSlot()
@@ -308,6 +340,7 @@ public class Slot : MonoBehaviour, IPointerClickHandler, IDragHandler, IBeginDra
         item = null;
         amount = 0;
         UpdateSlot();
+        Player.script.SaveSlot(this);
     }
 
     public void OnPointerEnter(PointerEventData eventData)

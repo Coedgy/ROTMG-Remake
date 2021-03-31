@@ -13,6 +13,8 @@ public class Item : ScriptableObject
 
     public bool stackable = false;
     public int maxStack = 1;
+
+    public bool tradable = true;
 }
 
 public class Equipment : Item

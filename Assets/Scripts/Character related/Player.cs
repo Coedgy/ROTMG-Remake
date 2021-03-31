@@ -1,8 +1,10 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Random = UnityEngine.Random;
 
 public class Player : MonoBehaviour
 {
@@ -22,6 +24,10 @@ public class Player : MonoBehaviour
     public TextMeshProUGUI expText;
     public TextMeshProUGUI levelText;
     public Slider levelBar;
+
+    public GameObject playerListPanel;
+    public GameObject containerPanel;
+    public bool containerOpen;
 
     public Character character;
 
@@ -50,8 +56,10 @@ public class Player : MonoBehaviour
     public int wisdomBonus;
     public int vitalityBonus;
 
-    public List<Slot> equipmentSlots = new List<Slot>();
-    public List<Slot> inventorySlots = new List<Slot>();
+    public List<Slot> allSlots = new List<Slot>();
+
+    public List<Collider2D> triggerList = new List<Collider2D>();
+    public Container closestContainer;
 
     private void Awake()
     {
@@ -59,20 +67,15 @@ public class Player : MonoBehaviour
 
         foreach (Slot slot in FindObjectsOfType<Slot>())
         {
-            if (slot.isEquipmentSlot)
-            {
-                equipmentSlots.Add(slot);
-            }
-            else
-            {
-                inventorySlots.Add(slot);
-            }
+            allSlots.Add(slot);
         }
+        allSlots = allSlots.OrderBy(slot => slot.slotNumber).ToList();
     }
 
     // Start is called before the first frame update
     void Start()
     {
+        CloseContainerPanel();
         character = new Character(Class.Knight);
         UpdateValues();
         health = maxHealth;
@@ -80,9 +83,9 @@ public class Player : MonoBehaviour
 
         InvokeRepeating("PerSecondFunctions", 1f, 1f);
 
-        foreach (Slot slot in inventorySlots)
+        foreach (Slot slot in allSlots)
         {
-            if (Random.Range(0,2) == 1)
+            if (!slot.isContainerSlot && !slot.isEquipmentSlot && Random.Range(0,2) == 1)
             {
                 slot.SetItem(ItemDatabaseManager.GetRandomItem());
             }
@@ -98,6 +101,56 @@ public class Player : MonoBehaviour
         {
             character.LevelUp();
             UpdateValues();
+        }
+        
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            if (!GiveItem(ItemDatabaseManager.GetRandomItem(), 1))
+            {
+                Debug.Log("Inventory full");
+            }
+        }
+        
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            if (!GiveItem(ItemDatabaseManager.GetItemByID(11), 1))
+            {
+                Debug.Log("Inventory full");
+            }
+        }
+        
+        CheckClosestContainer();
+    }
+
+    void CheckClosestContainer()
+    {
+        if (containerOpen)
+        {
+            float prevDistance = 999.0f;
+            foreach (Collider2D collider in triggerList)
+            {
+                float distance = Vector3.Distance(collider.gameObject.transform.position, gameObject.transform.position);
+                if (distance < prevDistance)
+                {
+                    if (closestContainer == null)
+                    {
+                        closestContainer = collider.gameObject.GetComponent<Container>();
+                        prevDistance = distance;
+                    }
+                    else
+                    {
+                        if (closestContainer.GetInstanceID() != collider.gameObject.GetComponent<Container>().GetInstanceID())
+                        {
+                            //SaveContainer(closestContainer);
+                            closestContainer = collider.gameObject.GetComponent<Container>();
+                            LoadContainer(closestContainer);
+                        
+                            UpdateContainer();
+                        }
+                        prevDistance = distance;
+                    }
+                }
+            }
         }
     }
 
@@ -125,7 +178,7 @@ public class Player : MonoBehaviour
         levelBar.value = (float)exp / (float)expNeeded;
     }
 
-    void UpdateValues()
+    public void UpdateValues()
     {
         CheckEquipment();
 
@@ -143,14 +196,126 @@ public class Player : MonoBehaviour
         manaRegen = 0.5f + 0.12f * (character.wisdom + wisdomBonus);
     }
 
-    public void SlotSwapped(bool equipmentRelated)
+    public bool GiveItem(Item item, int amount)
     {
-        if (equipmentRelated)
+        foreach (Slot slot in allSlots)
+        {
+            if (!slot.isContainerSlot && !slot.isEquipmentSlot)
+            {
+                if (slot.isEmpty)
+                {
+                    slot.item = item;
+                    slot.amount = amount;
+                    slot.UpdateSlot();
+                    SaveSlot(slot);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public bool AddItemToOpenContainer(Item item, int amount)
+    {
+        if (containerOpen)
+        {
+            foreach (Slot slot in allSlots)
+            {
+                if (slot.isContainerSlot)
+                {
+                    if (slot.isEmpty)
+                    {
+                        slot.amount = amount;
+                        slot.item = item;
+                        slot.UpdateSlot();
+                        SaveSlot(slot);
+                        closestContainer.CheckBagType();
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    public void SlotSwapped(Slot oldSlot, Slot newSlot)
+    {
+        if (newSlot.isEquipmentSlot || oldSlot.isEquipmentSlot)
         {
             UpdateValues();
         }
+
+        SaveSlot(oldSlot);
+        SaveSlot(newSlot);
+
+        if (oldSlot.isContainerSlot)
+        {
+            closestContainer.EmptyCheck();
+        }
     }
 
+    public void SaveSlot(Slot slot)
+    {
+        if (slot.isContainerSlot)
+        {
+            ContainerDataSlot dataSlot = closestContainer.container.containerSlots[slot.slotNumber - 13];
+            if (slot.isEmpty)
+            {
+                dataSlot.itemID = 0;
+                dataSlot.amount = 0;
+            }
+            else
+            {
+                dataSlot.itemID = slot.item.ID;
+                dataSlot.amount = slot.amount;
+            }
+            if (dataSlot.slotNumber != slot.slotNumber)
+            {
+                throw new Exception("Tried to save data to wrong slotNumber! Expected slotNum:" + dataSlot.slotNumber + ". oldSlot number was: " + slot.slotNumber);
+            }
+        }
+        else
+        {
+            InventoryDataSlot dataSlot = character.inventory.inventorySlots[slot.slotNumber - 1];
+            dataSlot.amount = slot.amount;
+            if (slot.isEmpty)
+            {
+                dataSlot.itemID = 0;
+                dataSlot.amount = 0;
+            }
+            else
+            {
+                dataSlot.itemID = slot.item.ID;
+            }
+            if (dataSlot.slotNumber != slot.slotNumber)
+            {
+                throw new Exception("Tried to save data to wrong slotNumber! Expected slotNum:" + dataSlot.slotNumber + ". oldSlot number was: " + slot.slotNumber);
+            }
+        }
+    }
+
+    void UpdateInventory()
+    {
+        foreach (Slot slot in allSlots)
+        {
+            if (!slot.isContainerSlot)
+            {
+                slot.UpdateSlot();
+            }
+        }
+    }
+
+    void UpdateContainer()
+    {
+        foreach (Slot slot in allSlots)
+        {
+            if (slot.isContainerSlot)
+            {
+                slot.UpdateSlot();
+            }
+        }
+    }
+    
     public void TakeDamage(float damage)
     {
         float value = damage - damageReduction;
@@ -172,321 +337,142 @@ public class Player : MonoBehaviour
         dexterityBonus = 0;
         wisdomBonus = 0;
         vitalityBonus = 0;
-        foreach (Slot slot in equipmentSlots)
+        foreach (Slot slot in allSlots)
         {
-            if (!slot.isEmpty)
+            if (slot.isEquipmentSlot)
             {
-                Equipment item = slot.item as Equipment;
-                maxHealthBonus += item.maxHealthBonus;
-                maxManaBonus += item.maxManaBonus;
-                attackBonus += item.attackBonus;
-                defenseBonus += item.defenseBonus;
-                speedBonus += item.speedBonus;
-                dexterityBonus += item.dexterityBonus;
-                wisdomBonus += item.wisdomBonus;
-                vitalityBonus += item.vitalityBonus;
-            }
-            if (slot.equipmentSlotType == EquipmentSlotType.Weapon)
-            {
-                if (slot.item != null)
+                if (!slot.isEmpty)
                 {
-                    weapon = slot.item as Weapon;
+                    Equipment item = slot.item as Equipment;
+                    maxHealthBonus += item.maxHealthBonus;
+                    maxManaBonus += item.maxManaBonus;
+                    attackBonus += item.attackBonus;
+                    defenseBonus += item.defenseBonus;
+                    speedBonus += item.speedBonus;
+                    dexterityBonus += item.dexterityBonus;
+                    wisdomBonus += item.wisdomBonus;
+                    vitalityBonus += item.vitalityBonus;
                 }
-                else
+                if (slot.equipmentSlotType == EquipmentSlotType.Weapon)
                 {
-                    weapon = null;
+                    if (slot.item != null)
+                    {
+                        weapon = slot.item as Weapon;
+                    }
+                    else
+                    {
+                        weapon = null;
+                    }
                 }
-            }
-            else if (slot.equipmentSlotType == EquipmentSlotType.Armor)
-            {
-                if (slot.item != null)
+                else if (slot.equipmentSlotType == EquipmentSlotType.Armor)
                 {
-                    armor = slot.item as Armor;
+                    if (slot.item != null)
+                    {
+                        armor = slot.item as Armor;
+                    }
+                    else
+                    {
+                        armor = null;
+                    }
                 }
-                else
+                else if (slot.equipmentSlotType == EquipmentSlotType.Ability)
                 {
-                    armor = null;
+                    if (slot.item != null)
+                    {
+                        ability = slot.item as Ability;
+                    }
+                    else
+                    {
+                        ability = null;
+                    }
                 }
-            }
-            else if (slot.equipmentSlotType == EquipmentSlotType.Ability)
-            {
-                if (slot.item != null)
+                else if (slot.equipmentSlotType == EquipmentSlotType.Accessory)
                 {
-                    ability = slot.item as Ability;
-                }
-                else
-                {
-                    ability = null;
-                }
-            }
-            else if (slot.equipmentSlotType == EquipmentSlotType.Accessory)
-            {
-                if (slot.item != null)
-                {
-                    accessory = slot.item as Accessory;
-                }
-                else
-                {
-                    accessory = null;
+                    if (slot.item != null)
+                    {
+                        accessory = slot.item as Accessory;
+                    }
+                    else
+                    {
+                        accessory = null;
+                    }
                 }
             }
         }
     }
-}
 
-public class Character
-{
-    public Class characterClass;
-
-    public InventoryData inventory;
-
-    public int level;
-    public int exp;
-    public int expNeeded;
-
-    public int life;
-    public int manaP;
-    public int attack;
-    public int defense;
-    public int speed;
-    public int dexterity;
-    public int wisdom;
-    public int vitality;
-
-    public Character(Class cClass)
+    public void LoadInventory()
     {
-        ClassValues def = new ClassValues(cClass);
+        foreach (Slot slot in allSlots)
+        {
+            if (!slot.isContainerSlot)
+            {
+                InventoryDataSlot dataSlot = character.inventory.inventorySlots[slot.slotNumber - 1];
 
-        characterClass = cClass;
-
-        inventory = new InventoryData();
-
-        level = 1;
-        exp = 0;
-        expNeeded = 50;
-
-        life = def.lifeBase;
-        manaP = def.manaPBase;
-        attack = def.attackBase;
-        defense = def.defenseBase;
-        speed = def.speedBase;
-        dexterity = def.dexterityBase;
-        wisdom = def.wisdomBase;
-        vitality = def.vitalityBase;
+                if (dataSlot.itemID == 0)
+                {
+                    slot.item = null;
+                    slot.amount = 0;
+                }
+                else
+                {
+                    slot.item = ItemDatabaseManager.GetItemByID(dataSlot.itemID);
+                    slot.amount = dataSlot.amount;
+                }
+                if (dataSlot.slotNumber != slot.slotNumber)
+                {
+                    throw new Exception("Tried to load data to wrong slotNumber! Expected slotNum:" + slot.slotNumber + ". oldSlot number was: " + dataSlot.slotNumber);
+                }
+            }
+        }
+        UpdateInventory();
     }
 
-    public void LevelUp()
+    public void LoadContainer(Container container)
     {
-        if (level < 20)
+        foreach (Slot slot in allSlots)
         {
-            level++;
-            expNeeded = expNeeded + 100;
-            exp = 0;
-
-            ClassValues def = new ClassValues(characterClass);
-
-            life += def.lifePL;
-            manaP += def.manaPPL;
-            attack += def.attackPL;
-            defense += def.defensePL;
-            speed += def.speedPL;
-            dexterity += def.dexterityPL;
-            wisdom += def.wisdomPL;
-            vitality += def.vitalityPL;
+            if (slot.isContainerSlot)
+            {
+                ContainerDataSlot dataSlot = container.container.containerSlots[slot.slotNumber - 13];
+                if (dataSlot.itemID == 0)
+                {
+                    slot.item = null;
+                    slot.amount = 0;
+                }
+                else
+                {
+                    slot.item = ItemDatabaseManager.GetItemByID(dataSlot.itemID);
+                    slot.amount = dataSlot.amount;
+                }
+                if (dataSlot.slotNumber != slot.slotNumber)
+                {
+                    throw new Exception("Tried to load data to wrong slotNumber! Expected slotNum:" + slot.slotNumber + ". oldSlot number was: " + dataSlot.slotNumber);
+                }
+            }
         }
-        else
+        UpdateContainer();
+    }
+
+    public void OpenContainerPanel()
+    {
+        containerPanel.SetActive(true);
+        playerListPanel.SetActive(false);
+        containerOpen = true;
+
+        CheckClosestContainer();
+        
+        if (closestContainer != null)
         {
-            Debug.Log("Maximum level of 20 reached");
+            LoadContainer(closestContainer);
         }
     }
-}
 
-public class InventoryData
-{
-    public List<int> slotNumber;
-    public List<int> itemID;
-    public List<int> amount;
-
-    public InventoryData()
+    public void CloseContainerPanel()
     {
-        slotNumber = new List<int>();
-        itemID = new List<int>();
-        amount = new List<int>();
-    }
-}
-
-public enum Class
-{
-    Knight,
-    Archer,
-    Wizard
-}
-
-public enum WeaponType
-{
-    Wand,
-    Staff,
-    Bow,
-    Dagger,
-    Sword
-}
-
-public enum ArmorType
-{
-    Robe,
-    Hide,
-    Armor
-}
-
-public struct ClassValues
-{
-    //Base stats
-    public int lifeBase;
-    public int manaPBase;
-    public int attackBase;
-    public int defenseBase;
-    public int speedBase;
-    public int dexterityBase;
-    public int wisdomBase;
-    public int vitalityBase;
-
-    //Stat cap
-    public int maxLife;
-    public int maxMana;
-    public int maxAttack;
-    public int maxDefense;
-    public int maxSpeed;
-    public int maxDexterity;
-    public int maxWisdom;
-    public int maxVitality;
-
-    //Stat gain per level
-    public int lifePL;
-    public int manaPPL;
-    public int attackPL;
-    public int defensePL;
-    public int speedPL;
-    public int dexterityPL;
-    public int wisdomPL;
-    public int vitalityPL;
-
-    public ClassValues(Class cClass)
-    {
-        if (cClass == Class.Knight)
-        {
-            this.lifeBase = 200;
-            this.manaPBase = 100;
-            this.attackBase = 15;
-            this.defenseBase = 0;
-            this.speedBase = 7;
-            this.dexterityBase = 10;
-            this.vitalityBase = 10;
-            this.wisdomBase = 10;
-
-            this.maxLife = 770;
-            this.maxMana = 252;
-            this.maxAttack = 50;
-            this.maxDefense = 40;
-            this.maxSpeed = 50;
-            this.maxDexterity = 50;
-            this.maxVitality = 75;
-            this.maxWisdom = 50;
-
-            this.lifePL = 25;
-            this.manaPPL = 5;
-            this.attackPL = 2;
-            this.defensePL = 0;
-            this.speedPL = 1;
-            this.dexterityPL = 1;
-            this.vitalityPL = 2;
-            this.wisdomPL = 1;
-        }
-        else if (cClass == Class.Archer)
-        {
-            this.lifeBase = 200;
-            this.manaPBase = 100;
-            this.attackBase = 15;
-            this.defenseBase = 0;
-            this.speedBase = 7;
-            this.dexterityBase = 10;
-            this.vitalityBase = 10;
-            this.wisdomBase = 10;
-
-            this.maxLife = 770;
-            this.maxMana = 252;
-            this.maxAttack = 50;
-            this.maxDefense = 40;
-            this.maxSpeed = 50;
-            this.maxDexterity = 50;
-            this.maxVitality = 75;
-            this.maxWisdom = 50;
-
-            this.lifePL = 25;
-            this.manaPPL = 5;
-            this.attackPL = 2;
-            this.defensePL = 0;
-            this.speedPL = 1;
-            this.dexterityPL = 1;
-            this.vitalityPL = 2;
-            this.wisdomPL = 1;
-        }
-        else if (cClass == Class.Wizard)
-        {
-            this.lifeBase = 200;
-            this.manaPBase = 100;
-            this.attackBase = 15;
-            this.defenseBase = 0;
-            this.speedBase = 7;
-            this.dexterityBase = 10;
-            this.vitalityBase = 10;
-            this.wisdomBase = 10;
-
-            this.maxLife = 770;
-            this.maxMana = 252;
-            this.maxAttack = 50;
-            this.maxDefense = 40;
-            this.maxSpeed = 50;
-            this.maxDexterity = 50;
-            this.maxVitality = 75;
-            this.maxWisdom = 50;
-
-            this.lifePL = 25;
-            this.manaPPL = 5;
-            this.attackPL = 2;
-            this.defensePL = 0;
-            this.speedPL = 1;
-            this.dexterityPL = 1;
-            this.vitalityPL = 2;
-            this.wisdomPL = 1;
-        }
-        else
-        {
-            this.lifeBase = 0;
-            this.manaPBase = 0;
-            this.attackBase = 0;
-            this.defenseBase = 0;
-            this.speedBase = 0;
-            this.dexterityBase = 0;
-            this.vitalityBase = 0;
-            this.wisdomBase = 0;
-
-            this.maxLife = 0;
-            this.maxMana = 0;
-            this.maxAttack = 0;
-            this.maxDefense = 0;
-            this.maxSpeed = 0;
-            this.maxDexterity = 0;
-            this.maxVitality = 0;
-            this.maxWisdom = 0;
-
-            this.lifePL = 0;
-            this.manaPPL = 0;
-            this.attackPL = 0;
-            this.defensePL = 0;
-            this.speedPL = 0;
-            this.dexterityPL = 0;
-            this.vitalityPL = 0;
-            this.wisdomPL = 0;
-        }
+        containerPanel.SetActive(false);
+        playerListPanel.SetActive(true);
+        containerOpen = false;
+        closestContainer = null;
     }
 }

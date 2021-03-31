@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e0d72c5321b1c44d977f36ea63d17c3, type: 3}
+  m_Name: Queen
+  m_EditorClassIdentifier: 
+  damageTreshold: 70
+  tresholdAsPercentage: 0
+  lootList:
+  - itemID: 11
+    amount: 1
+    probability: 5
+    containerType: 2
+    entryType: 0
+  - itemID: 6
+    amount: 1
+    probability: 30
+    containerType: 1
+    entryType: 0
+  - itemID: 1
+    amount: 1
+    probability: 50
+    containerType: 1
+    entryType: 0
+  - itemID: 2
+    amount: 1
+    probability: 50
+    containerType: 1
+    entryType: 1
+  - itemID: 1
+    amount: 1
+    probability: 100
+    containerType: 0
+    entryType: 2
