@@ -40,6 +40,13 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    ContainerType GetContainerType(List<int> itemList)
+    {
+        //TODO make a list of lootbag item containerType enums, then remove all that arent in the list
+        
+        return ContainerType.brown_bag;
+    }
+    
     void Die()
     {
         Dictionary<int, int> itemList = ItemDatabaseManager.ConvertLootTable(lootTable);
@@ -59,7 +66,8 @@ public class Enemy : MonoBehaviour
             {
                 List<int> itemIDlist = itemList.Keys.ToList();
                 List<int> itemAmountList = itemList.Values.ToList();
-                ContainerPrefabs.manager.CreateContainer(ContainerType.purple_bag, gameObject.transform.position, itemIDlist, itemAmountList); //TODO Change the bag depending on loot
+
+                ContainerPrefabs.manager.CreateContainer(GetContainerType(itemIDlist), gameObject.transform.position, itemIDlist, itemAmountList); //TODO Change the bag depending on loot
             }
         }
         Debug.Log(gameObject + " was killed");

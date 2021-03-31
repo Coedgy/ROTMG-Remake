@@ -16,6 +16,7 @@ public struct LootTableEntry
     public int itemID;
     public int amount;
     public float probability;
+    public ContainerType containerType;
     public LootEntryType entryType;
 }
 
