@@ -176,7 +176,7 @@ public class Player : MonoBehaviour
         levelBar.value = (float)exp / (float)expNeeded;
     }
 
-    void UpdateValues()
+    public void UpdateValues()
     {
         CheckEquipment();
 

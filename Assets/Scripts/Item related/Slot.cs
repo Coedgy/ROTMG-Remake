@@ -328,6 +328,11 @@ public class Slot : MonoBehaviour, IPointerClickHandler, IDragHandler, IBeginDra
             
             ClearSlot();
         }
+
+        if (isEquipmentSlot)
+        {
+            Player.script.UpdateValues();
+        }
     }
 
     void ClearSlot()
