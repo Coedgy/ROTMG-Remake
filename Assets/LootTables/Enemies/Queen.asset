@@ -25,7 +25,7 @@ MonoBehaviour:
     probability: 30
     containerType: 1
     entryType: 0
-  - itemID: 1
+  - itemID: 5
     amount: 1
     probability: 50
     containerType: 1
