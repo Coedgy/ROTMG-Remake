@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class ItemDatabaseManager : MonoBehaviour
 {
@@ -81,6 +83,60 @@ public class ItemDatabaseManager : MonoBehaviour
     {
         Dictionary<int, int> result = new Dictionary<int, int>();
 
+        foreach (LootEntryType type in new List<LootEntryType>() {LootEntryType.Loot1, LootEntryType.Loot2, LootEntryType.Loot3})
+        {
+            if (lootTable.lootList.All(x => x.entryType != type))
+            {
+                
+            }
+            else
+            {
+                Dictionary<LootTableEntry, float> minValues = new Dictionary<LootTableEntry, float>();
+                Dictionary<LootTableEntry, float> maxValues = new Dictionary<LootTableEntry, float>();
+
+                float maxValue = 0.0f;
+                float prevMax = 0.0f;
+                foreach (var slot in lootTable.lootList)
+                {
+                    if (slot.entryType == type)
+                    {
+                        maxValue += slot.probability;
+            
+                        minValues.Add(slot, prevMax + 0.01f);
+                        maxValues.Add(slot,maxValue);
+                        prevMax = maxValue;
+                    }
+                }
+
+                if (maxValues.Last().Value < 100.00f)
+                {
+                    LootTableEntry temp = new LootTableEntry()
+                        {amount = 0, itemID = 0, entryType = type, probability = 0.0f};
+                    minValues.Add(temp, maxValues.Last().Value + 0.01f);
+                    maxValues.Add(temp, 100.0f);
+                }
+
+                if (maxValues.Last().Value > 100.0f)
+                {
+                    throw new Exception("Loot table '" + lootTable.name + "' probabilities sum over 100% at loot type '" + type + "'");
+                }
+
+                float value = Random.Range(0.0f, 100.0f);
+                List<float> minList = minValues.Values.ToList();
+                List<float> maxList = maxValues.Values.ToList();
+                for (int i = 0; i < maxValues.Count; i++)
+                {
+                    if (minList[i] < value && value < maxList[i])
+                    {
+                        LootTableEntry winner = minValues.First(x => x.Value.Equals(minList[i])).Key;
+                        if (winner.amount != 0)
+                        {
+                            result.Add(winner.itemID, winner.amount);
+                        }
+                    }
+                }
+            }
+        }
         return result;
     }
 

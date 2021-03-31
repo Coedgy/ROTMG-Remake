@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -29,7 +27,6 @@ public class Enemy : MonoBehaviour
         if (playerDamages.ContainsKey(player))
         {
             playerDamages[player] += damage;
-            Debug.Log(playerDamages[player]);
         }
         else
         {

@@ -5,9 +5,9 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New LootTable", menuName = "Loot Table")]
 public class LootTable : ScriptableObject
 {
-    public List<LootTableEntry> lootList;
     public float damageTreshold;
     public bool tresholdAsPercentage = false;
+    public List<LootTableEntry> lootList;
 }
 
 [Serializable]
@@ -21,7 +21,7 @@ public struct LootTableEntry
 
 public enum LootEntryType
 {
-    Phase1,
-    Phase2,
-    Guaranteed
+    Loot1,
+    Loot2,
+    Loot3
 }

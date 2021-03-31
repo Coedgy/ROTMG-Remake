@@ -12,6 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e0d72c5321b1c44d977f36ea63d17c3, type: 3}
   m_Name: Queen
   m_EditorClassIdentifier: 
-  lootList: []
   damageTreshold: 70
   tresholdAsPercentage: 0
+  lootList:
+  - itemID: 11
+    amount: 1
+    probability: 50
+    entryType: 0
+  - itemID: 6
+    amount: 1
+    probability: 20
+    entryType: 0
+  - itemID: 1
+    amount: 1
+    probability: 100
+    entryType: 1
