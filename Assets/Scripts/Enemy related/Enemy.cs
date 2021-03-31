@@ -43,8 +43,6 @@ public class Enemy : MonoBehaviour
     void Die()
     {
         Dictionary<int, int> itemList = ItemDatabaseManager.ConvertLootTable(lootTable);
-        List<int> itemIDlist = itemList.Keys.ToList();
-        List<int> itemAmountList = itemList.Values.ToList();
 
         float value;
         if (lootTable.tresholdAsPercentage)
@@ -57,7 +55,12 @@ public class Enemy : MonoBehaviour
         }
         if (playerDamages[Player.script] >= value)
         {
-            ContainerPrefabs.manager.CreateContainer(ContainerType.purple_bag, gameObject.transform.position, itemIDlist, itemAmountList); //TODO Change the bag depending on loot
+            if (itemList.Count > 0)
+            {
+                List<int> itemIDlist = itemList.Keys.ToList();
+                List<int> itemAmountList = itemList.Values.ToList();
+                ContainerPrefabs.manager.CreateContainer(ContainerType.purple_bag, gameObject.transform.position, itemIDlist, itemAmountList); //TODO Change the bag depending on loot
+            }
         }
         Debug.Log(gameObject + " was killed");
         Destroy(gameObject);

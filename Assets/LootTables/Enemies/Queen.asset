@@ -17,13 +17,13 @@ MonoBehaviour:
   lootList:
   - itemID: 11
     amount: 1
-    probability: 50
+    probability: 1
     entryType: 0
   - itemID: 6
     amount: 1
-    probability: 20
+    probability: 1
     entryType: 0
   - itemID: 1
     amount: 1
-    probability: 100
-    entryType: 1
+    probability: 1
+    entryType: 0
