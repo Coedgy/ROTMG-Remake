@@ -15,7 +15,7 @@ public class SpriteRendererManager : MonoBehaviour
         {
             script = this;
         }
-        UIManager.InitializeElements();
+        DontDestroyOnLoad(gameObject);
     }
 
     void Start()
