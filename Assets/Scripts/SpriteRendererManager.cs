@@ -14,8 +14,10 @@ public class SpriteRendererManager : MonoBehaviour
         if (script == null)
         {
             script = this;
+        }else if (script != this)
+        {
+            Destroy(gameObject);
         }
-        DontDestroyOnLoad(gameObject);
     }
 
     void Start()
