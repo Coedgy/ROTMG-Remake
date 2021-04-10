@@ -6,6 +6,7 @@ public class LoginManager : MonoBehaviour
 {
     public TMP_InputField usernameInputField;
     public TMP_InputField passwordInputField;
+    public TextMeshProUGUI errorText;
 
     private void Update()
     {
