@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class MainMenuManager : MonoBehaviour
 {
     public Button charactersButton;
+    public Button graveyardButton;
     public Button shopButton;
     public Button optionsButton;
     public Button logoutButton;
@@ -27,6 +28,12 @@ public class MainMenuManager : MonoBehaviour
     {
         HideAllMenus();
         charactersButton.GetComponent<Image>().color = buttonSelectedColor;
+    }
+    
+    public void OpenGraveyard()
+    {
+        HideAllMenus();
+        graveyardButton.GetComponent<Image>().color = buttonSelectedColor;
     }
 
     public void OpenShop()
