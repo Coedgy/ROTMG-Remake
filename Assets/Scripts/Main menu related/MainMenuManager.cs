@@ -67,7 +67,9 @@ public class MainMenuManager : MonoBehaviour
         shopButton.GetComponent<Image>().color = defaultButtonColor;
         optionsButton.GetComponent<Image>().color = defaultButtonColor;
         logoutButton.GetComponent<Image>().color = defaultButtonColor;
-        quitButton.GetComponent<Image>().color = defaultButtonColor;
+        Color color;
+        ColorUtility.TryParseHtmlString("#302020", out color);
+        quitButton.GetComponent<Image>().color = color;
 
         //charactersMenu.SetActive(false);
     }
