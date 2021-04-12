@@ -4,6 +4,8 @@ public class Character
 {
     public Class characterClass;
 
+    public Skin skin;
+
     public InventoryData inventory;
 
     public int level;
@@ -25,6 +27,8 @@ public class Character
 
         characterClass = cClass;
 
+        skin = def.defaultSkin;
+
         inventory = new InventoryData();
 
         level = 1;
@@ -41,6 +45,47 @@ public class Character
         vitality = def.vitalityBase;
     }
 
+    public int CountMaxedStats()
+    {
+        int maxedStats = 0;
+        ClassValues def = new ClassValues(characterClass);
+        
+        if (life == def.maxLife)
+        {
+            maxedStats++;
+        }
+        if (manaP == def.maxMana)
+        {
+            maxedStats++;
+        }
+        if (attack == def.maxAttack)
+        {
+            maxedStats++;
+        }
+        if (defense == def.maxDefense)
+        {
+            maxedStats++;
+        }
+        if (speed == def.maxSpeed)
+        {
+            maxedStats++;
+        }
+        if (dexterity == def.maxDexterity)
+        {
+            maxedStats++;
+        }
+        if (wisdom == def.maxWisdom)
+        {
+            maxedStats++;
+        }
+        if (vitality == def.maxVitality)
+        {
+            maxedStats++;
+        }
+        
+        return maxedStats;
+    }
+    
     public void LevelUp()
     {
         if (level < 20)
@@ -125,6 +170,8 @@ public enum ArmorType
 
 public struct ClassValues
 {
+    public Skin defaultSkin;
+    
     //Base stats
     public int lifeBase;
     public int manaPBase;
@@ -159,6 +206,8 @@ public struct ClassValues
     {
         if (cClass == Class.Knight)
         {
+            defaultSkin = Resources.Load<Skin>("Skins/Knight/EliteKnight");
+            
             this.lifeBase = 200;
             this.manaPBase = 100;
             this.attackBase = 15;
@@ -179,7 +228,7 @@ public struct ClassValues
 
             this.lifePL = 25;
             this.manaPPL = 5;
-            this.attackPL = 2;
+            this.attackPL = 1;
             this.defensePL = 0;
             this.speedPL = 1;
             this.dexterityPL = 1;
@@ -188,6 +237,8 @@ public struct ClassValues
         }
         else if (cClass == Class.Archer)
         {
+            defaultSkin = Resources.Load<Skin>("Skins/Knight/EliteKnight");
+            
             this.lifeBase = 200;
             this.manaPBase = 100;
             this.attackBase = 15;
@@ -217,6 +268,8 @@ public struct ClassValues
         }
         else if (cClass == Class.Wizard)
         {
+            defaultSkin = Resources.Load<Skin>("Skins/Knight/EliteKnight");
+            
             this.lifeBase = 200;
             this.manaPBase = 100;
             this.attackBase = 15;
@@ -246,6 +299,8 @@ public struct ClassValues
         }
         else
         {
+            defaultSkin = Resources.Load<Skin>("Skins/Knight/EliteKnight");
+            
             this.lifeBase = 0;
             this.manaPBase = 0;
             this.attackBase = 0;

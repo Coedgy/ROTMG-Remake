@@ -14,8 +14,10 @@ public class SpriteRendererManager : MonoBehaviour
         if (script == null)
         {
             script = this;
+        }else if (script != this)
+        {
+            Destroy(gameObject);
         }
-        UIManager.InitializeElements();
     }
 
     void Start()
