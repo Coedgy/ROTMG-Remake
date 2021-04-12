@@ -12,6 +12,8 @@ public class MainMenuManager : MonoBehaviour
     public Button logoutButton;
     public Button quitButton;
 
+    public GameObject charactersPanel;
+    
     public GameObject errorBox;
     public TextMeshProUGUI errorText;
     
@@ -22,18 +24,21 @@ public class MainMenuManager : MonoBehaviour
     {
         defaultButtonColor = charactersButton.GetComponent<Image>().color;
         ColorUtility.TryParseHtmlString("#FF6F00", out buttonSelectedColor);
+        
+        OpenCharacters();
     }
 
     public void OpenCharacters()
     {
         HideAllMenus();
         charactersButton.GetComponent<Image>().color = buttonSelectedColor;
+        charactersPanel.SetActive(true);
     }
     
     public void OpenGraveyard()
     {
-        HideAllMenus();
-        graveyardButton.GetComponent<Image>().color = buttonSelectedColor;
+        //HideAllMenus();
+        //graveyardButton.GetComponent<Image>().color = buttonSelectedColor;
     }
 
     public void OpenShop()
@@ -64,6 +69,7 @@ public class MainMenuManager : MonoBehaviour
     public void HideAllMenus()
     {
         charactersButton.GetComponent<Image>().color = defaultButtonColor;
+        graveyardButton.GetComponent<Image>().color = defaultButtonColor;
         shopButton.GetComponent<Image>().color = defaultButtonColor;
         optionsButton.GetComponent<Image>().color = defaultButtonColor;
         logoutButton.GetComponent<Image>().color = defaultButtonColor;
@@ -71,6 +77,6 @@ public class MainMenuManager : MonoBehaviour
         ColorUtility.TryParseHtmlString("#302020", out color);
         quitButton.GetComponent<Image>().color = color;
 
-        //charactersMenu.SetActive(false);
+        charactersPanel.SetActive(false);
     }
 }

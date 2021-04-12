@@ -9,5 +9,6 @@ public class LevelEnvironment : MonoBehaviour
     private void Awake()
     {
         UIManager.InitializeElements();
+        SpriteRendererManager.script.ResetLists();
     }
 }
