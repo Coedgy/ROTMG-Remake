@@ -254,7 +254,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 238f6489ec7165441b12598b7409b430, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  wipButton: 1
+  wipButton: 0
 --- !u!1 &1031219833204605973
 GameObject:
   m_ObjectHideFlags: 0
@@ -4735,7 +4735,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 238f6489ec7165441b12598b7409b430, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  wipButton: 1
+  wipButton: 0
 --- !u!1 &1031219833860490058
 GameObject:
   m_ObjectHideFlags: 0
