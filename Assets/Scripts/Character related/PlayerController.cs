@@ -8,6 +8,9 @@ public class PlayerController : MonoBehaviour
     private Vector2 velocity;
     private Rigidbody2D rb;
 
+    public GameObject canvas;
+    public GameObject pauseMenu;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -18,6 +21,11 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyDown(Settings.SM.pauseKey))
+        {
+            Instantiate(pauseMenu, canvas.transform);
+        }
+        
         float moveInputX = Input.GetAxisRaw("Horizontal");
         float moveInputY = Input.GetAxisRaw("Vertical");
         velocity.x = moveInputX;

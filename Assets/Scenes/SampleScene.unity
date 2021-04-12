@@ -10746,6 +10746,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6ccbbf2c5032c54595c08c28bdcd9f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canvas: {fileID: 1987659378}
+  pauseMenu: {fileID: 3403718625798989875, guid: 7b55defc66cce334d819e7b5c4cfb80c,
+    type: 3}
 --- !u!61 &1960952966
 BoxCollider2D:
   m_ObjectHideFlags: 0
