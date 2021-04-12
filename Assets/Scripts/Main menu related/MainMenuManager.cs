@@ -13,6 +13,8 @@ public class MainMenuManager : MonoBehaviour
     public Button quitButton;
 
     public GameObject charactersPanel;
+
+    public GameObject settingsPrefab;
     
     public GameObject errorBox;
     public TextMeshProUGUI errorText;
@@ -51,7 +53,8 @@ public class MainMenuManager : MonoBehaviour
     public void OpenOptions()
     {
         HideAllMenus();
-        optionsButton.GetComponent<Image>().color = buttonSelectedColor;
+
+        Instantiate(settingsPrefab, transform);
     }
     
     public void LogoutAction()
