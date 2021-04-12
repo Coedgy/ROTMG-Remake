@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
@@ -16,13 +14,12 @@ public class CharactersList : MonoBehaviour
 
     private void Awake()
     {
-        charactersList.Add(new Character(Class.Knight));
         RefreshCharactersList();
     }
 
     void ReloadCharactersList()
     {
-        //TODO Get characters from database and populate charactersList with it
+        //TODO Clear charactersList, get characters from database and populate charactersList with them
     }
     
     void RefreshCharactersList()
@@ -62,22 +59,20 @@ public class CharactersList : MonoBehaviour
     
     public void CharacterButtonAction(GameObject slot)
     {
-        Debug.Log("CharacterAction: " + charactersList[slot.transform.GetSiblingIndex()].level);
-        
         //TODO go to gameplay scene with the chosen character
+
+        SceneManager.LoadScene("SampleScene");
     }
     
     public void RemoveButtonAction(GameObject slot)
     {
-        //TODO Remove character from database and refresh the character screen
-        
-        charactersList.RemoveAt(slot.transform.GetSiblingIndex());
+        charactersList.RemoveAt(slot.transform.GetSiblingIndex()); //TODO Remove character from database instead of the list
         RefreshCharactersList();
     }
 
     public void NewCharacterAction()
     { 
-        //TODO go to character creation screen
+        //TODO go to character creation screen instead of the below
         
         charactersList.Add(new Character(Class.Knight){level = Random.Range(0,21)});
         RefreshCharactersList();
