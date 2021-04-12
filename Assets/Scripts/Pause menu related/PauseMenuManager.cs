@@ -1,9 +1,17 @@
-﻿using UnityEngine;
+﻿using System;
+using TMPro;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class PauseMenuManager : MonoBehaviour
 {
     public GameObject settingsPrefab;
+    public TextMeshProUGUI versionText;
+
+    private void Awake()
+    {
+        versionText.text = Application.productName + " " + Application.version + "" + Application.platform;
+    }
 
     public void ResumeButton()
     {
