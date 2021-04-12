@@ -25,4 +25,9 @@ public class LoginManager : MonoBehaviour
     {
         SceneManager.LoadScene("MainMenu");
     }
+
+    public void ExitAction()
+    {
+        Application.Quit();
+    }
 }
