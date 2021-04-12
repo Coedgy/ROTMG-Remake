@@ -228,7 +228,7 @@ public struct ClassValues
 
             this.lifePL = 25;
             this.manaPPL = 5;
-            this.attackPL = 2;
+            this.attackPL = 1;
             this.defensePL = 0;
             this.speedPL = 1;
             this.dexterityPL = 1;
