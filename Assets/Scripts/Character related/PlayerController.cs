@@ -11,6 +11,8 @@ public class PlayerController : MonoBehaviour
     public GameObject canvas;
     public GameObject pauseMenu;
 
+    public bool movementLocked;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -21,9 +23,15 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(Settings.SM.pauseKey))
+        if (Input.GetKeyDown(Settings.SM.pauseKey) && movementLocked == false)
         {
             Instantiate(pauseMenu, canvas.transform);
+            movementLocked = true;
+        }
+
+        if (movementLocked)
+        {
+            return;
         }
         
         float moveInputX = Input.GetAxisRaw("Horizontal");

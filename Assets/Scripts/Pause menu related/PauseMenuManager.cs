@@ -13,8 +13,17 @@ public class PauseMenuManager : MonoBehaviour
         versionText.text = Application.productName + " " + Application.version + "" + Application.platform;
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(Settings.SM.pauseKey))
+        {
+            ResumeButton();
+        }
+    }
+
     public void ResumeButton()
     {
+        Player.script.gameObject.GetComponent<PlayerController>().movementLocked = false;
         Destroy(gameObject);
     }
     

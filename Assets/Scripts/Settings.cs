@@ -6,7 +6,7 @@ using UnityEngine;
 public class Settings : MonoBehaviour
 {
     public static Settings SM;
-    
+
     // VIDEO
     public int fpsLimit { get; set; }
     public int windowMode { get; set; }
