@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -22,6 +23,14 @@ public class OptionsMenuManager : MonoBehaviour
         ColorUtility.TryParseHtmlString("#FF6F00", out buttonSelectedColor);
         
         OpenGeneral();
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(Settings.SM.pauseKey))
+        {
+            BackAction();
+        }
     }
 
     public void OpenGeneral()

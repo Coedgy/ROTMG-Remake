@@ -15,7 +15,7 @@ public class PauseMenuManager : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(Settings.SM.pauseKey))
+        if (Input.GetKeyDown(Settings.SM.pauseKey) && !settingsPrefab.activeInHierarchy)
         {
             ResumeButton();
         }
