@@ -52,8 +52,6 @@ public class MainMenuManager : MonoBehaviour
 
     public void OpenOptions()
     {
-        HideAllMenus();
-
         Instantiate(settingsPrefab, transform);
     }
     
