@@ -1,6 +1,6 @@
 # ROTMG-Remake
 
-### Links:
+### Quick links for myself:
 
 * [Trello board](https://trello.com/b/xMTthbJw)
 
